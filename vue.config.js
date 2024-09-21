@@ -8,6 +8,9 @@ module.exports = defineConfig({
         "@": path.resolve(__dirname, "src"),
       },
     },
+    devServer: {
+      port: 8080, // 你想要設定的 port 號
+    },
   },
-  publicPath:process.env.NODE_ENV === 'produvtion'? '/':'/',
+  publicPath: process.env.NODE_ENV === "produvtion" ? "/" : "/",
 });

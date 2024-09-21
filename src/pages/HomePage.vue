@@ -34,18 +34,32 @@ export default {
 
       gsap.from(".right", {
         scrollTrigger: {
-          trigger: ".banner",
-          start: "center center", // 當 .right 元素的頂部進入視窗底部時觸發
-          end: "bottom top-100", // 當 .right 元素的頂部到達視窗中心時結束
-        //   markers: true, // 顯示觸發點
+          trigger: ".fist-background",
+          start: "top top", // 當 .right 元素的頂部進入視窗底部時觸發
+          end: "bottom 100", // 當 .right 元素的頂部到達視窗中心時結束
+            // markers: true, // 顯示觸發點
           snap: 1, // 捲動時每次滾動 1/4 螢幕寬度
-          pin: ".banner",
+          pin: ".first-background",
           scrub: true, // 平滑滾動
         },
         x: window.innerWidth, // 從螢幕右邊滑入
         duration: 1,
         ease: "power2.out",
       });
+
+      gsap.to(".banner-container",{
+        scrollTrigger:{
+          trigger:".first-background",
+          start:"bottom bottom",
+          end:"bottom 100",
+          markers:true,
+          scrub:1,
+          // pin:".first-background",
+        },
+        y:-window.innerHeight,
+        duration:1,
+        ease:"power2.out",
+      })
     });
 
     return {
@@ -57,21 +71,36 @@ export default {
 </script>
 
 <template>
-  <div class="banner">
+  <div class="first-background">
     <div class="imgs">
       <img v-for="i in 5" :key="i" :src="bannerImg" class="img" />
     </div>
-    <div class="components-container">
+    <div class="banner-container">
       <div class="components">
         <div class="left">
           <div class="top">
             <h1>Eternal Weavings</h1>
             <h1>Eternal Weavings</h1>
-            <h6>- Contemporary Knot Art of Hsu Pei-tzu -</h6>
+            <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
           </div>
           <div class="bottom">
-            <p class="rotated-text">Contemporary Knot Art of Hsu Pei-tzu</p>
-            <p class="vertical-text">徐 碧 姿 結 藝 編 織</p>
+            <ul class="rotated-text">
+              <li>Contemporary</li>
+              <li>Knot</li>
+              <li>Art</li>
+              <li>of</li>
+              <li>Hsu</li>
+              <li>Pei-Tzu</li>
+            </ul>
+            <ul class="vertical-text">
+              <li>徐</li>
+              <li>碧</li>
+              <li>姿</li>
+              <li>結</li>
+              <li>藝</li>
+              <li>編</li>
+              <li>織</li>
+            </ul>
             <img :src="iconImg" />
           </div>
         </div>
@@ -94,24 +123,49 @@ export default {
         </div>
       </div>
     </div>
+    <div class="artist-contrainer">
+      <div class="left">
+        <div class="top">
+          <h1>徐碧姿</h1>
+          <h3>Hsu Pei-Tzu</h3>
+        </div>
+        <div class="bottom">
+          藝術家李貞慧。 永遠的母親、妻子、女兒。教授。創作者。
+          柔軔如藤、昂揚似松。 她追逐光影，調皮如精靈玩弄顏料;
+          她感悟生命，內觀自省、悠然自得。 其作品於一筆一畫間完成禪修般的頓悟，
+          自成生命第三境界。 (文/游惠遠)
+        </div>
+      </div>
+      <div class="right"></div>
+    </div>
   </div>
   <div class="block"></div>
 </template>
 
 <style scoped lang="scss">
-.block{
-    height: 500vh;
-    width: 100%;
+.block {
+  height: 500vh;
+  width: 100%;
 }
-.banner {
+.first-background {
   height: 100vh;
   overflow: hidden;
 }
+
 .imgs {
   display: flex;
   white-space: nowrap;
+  img {
+    height: 100vh;
+    margin-left: -1px;
+
+    &:nth-child(2n) {
+      transform: scaleX(-1);
+    }
+  }
 }
-.components-container {
+
+.banner-container {
   position: absolute;
   top: 0;
   left: 0;
@@ -120,87 +174,98 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.components {
-  //   max-width: 1600px;
-  width: 100%;
-  z-index: 99;
-  top: 0;
-  left: 0;
-  display: flex;
-  .left {
-    width: var(--banner-left-width);
-    .top {
-      height: 50vh;
-      padding: var(--logo-padding) 0 0 var(--logo-padding);
-      h1 {
-        text-transform: uppercase;
-        font-family: "Playfair Display";
-        line-height: normal;
-        font-weight: 500;
-        font-size: var(--banner-main-font-size);
-        &:nth-child(2) {
-          color: #9f886b;
+  .components {
+    //   max-width: 1600px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: flex;
+    .left {
+      width: var(--banner-left-width);
+      .top {
+        position: absolute;
+        padding: var(--logo-padding) 0 0 var(--logo-padding);
+        h1 {
+          text-transform: uppercase;
+          font-family: "Playfair Display";
+          line-height: normal;
+          font-weight: 500;
+          font-size: var(--banner-main-font-size);
+          &:nth-child(2) {
+            color: #9f886b;
+          }
+        }
+        h6 {
+          font-family: "Qwigley";
+          font-size: var(--banner-second-font-size);
+          font-weight: 400;
         }
       }
-      h6 {
-        font-family: "Qwigley";
-        font-size: var(--banner-second-font-size);
-        font-weight: 400;
+      .bottom {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        padding: 0 0 var(--logo-padding) var(--logo-padding);
+        display: flex;
+        align-items: center;
+        ul {
+          display: flex;
+          li {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            font-weight: 600;
+            color: #232323;
+            flex-shrink: 0;
+          }
+        }
+        .rotated-text {
+          font-family: "Playfair Display" !important;
+          writing-mode: vertical-rl;
+          justify-content: center;
+          align-items: center;
+          flex-shrink: 0;
+          height: 35vh;
+          li:not(:first-child) {
+            margin-top: 5px;
+          }
+        }
+        .vertical-text {
+          line-height: normal;
+          height: 100%;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-between;
+          padding: 15px 25px 15px 0;
+          height: 35vh;
+        }
+        img {
+          height: 40vh;
+        }
       }
     }
-    .bottom {
-      height: 50vh;
-      padding: 0 0 var(--logo-padding) var(--logo-padding);
+    .right {
+      height: 100vh;
+      width: calc(100% - var(--banner-left-width));
       display: flex;
+      justify-content: flex-end;
       align-items: center;
-      .vertical-text {
-        line-height: normal;
-        margin-right: 25px;
-      }
-      .rotated-text {
-        font-family: "Playfair Display" !important;
-        writing-mode: vertical-rl;
-        text-orientation: mixed;
-        font-weight: 600;
-        color: #232323;
-      }
-      .vertical-text {
-        writing-mode: vertical-rl;
-        -webkit-writing-mode: vertical-rl;
-        text-orientation: upright;
-        font-weight: 600;
-        letter-spacing: 5px;
-        color: #232323;
-      }
-      img {
-        height: 100%;
-      }
-    }
-  }
-  .right {
-    height: 100vh;
-    width: calc(100% - var(--banner-left-width));
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    .text-content {
-      background: linear-gradient(to left, #efebe5 80%, transparent);
-      p {
-        max-width: 1000px;
-        padding: 80px 50px 80px 110px;
+      .text-content {
+        background: linear-gradient(to left, #efebe5 80%, transparent);
+        p {
+          max-width: 1000px;
+          padding: 80px 50px 80px 110px;
+        }
       }
     }
   }
 }
 
-img {
+.artist-contrainer {
   height: 100vh;
-  margin-left: -1px;
-
-  &:nth-child(2n) {
-    transform: scaleX(-1);
-  }
+  width: 100%;
+  background-color: #7e7e7e;
+  position: relative;
+  z-index: 999;
 }
 </style>
