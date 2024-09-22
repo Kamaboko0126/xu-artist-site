@@ -14,11 +14,13 @@ export default {
       await nextTick();
 
       const imgElement = document.querySelector(".img");
+
+      var tl = gsap.timeline({});
       if (imgElement) {
         imgElement.onload = () => {
           const imgWidth = imgElement.offsetWidth - 1;
           console.log("imgWidth:", imgWidth); // 確認 imgWidth 是否正確
-          gsap.to(".imgs", {
+          tl.to(".imgs", {
             scrollTrigger: {
               trigger: ".imgs",
             },
@@ -32,34 +34,31 @@ export default {
         console.error("imgElement not found");
       }
 
-      gsap.from(".right", {
+      tl.from(".right", {
         scrollTrigger: {
-          trigger: ".fist-background",
           start: "top top", // 當 .right 元素的頂部進入視窗底部時觸發
-          end: "bottom 100", // 當 .right 元素的頂部到達視窗中心時結束
-            // markers: true, // 顯示觸發點
+          end: "+=800", // 當 .right 元素的頂部到達視窗中心時結束
           snap: 1, // 捲動時每次滾動 1/4 螢幕寬度
-          pin: ".first-background",
           scrub: true, // 平滑滾動
+          pin: ".banner-container", // 固定 .right 元素
         },
         x: window.innerWidth, // 從螢幕右邊滑入
         duration: 1,
         ease: "power2.out",
       });
 
-      gsap.to(".banner-container",{
-        scrollTrigger:{
-          trigger:".first-background",
-          start:"bottom bottom",
-          end:"bottom 100",
-          markers:true,
-          scrub:1,
-          // pin:".first-background",
-        },
-        y:-window.innerHeight,
-        duration:1,
-        ease:"power2.out",
-      })
+      // ScrollTrigger.create({
+      //   trigger: ".block-100",
+      //   start: "center bottom",
+      //   markers: true,
+      //   onEnter: () => {
+      //     gsap.to(window, {
+      //       scrollTo: { y: ".artist-container", offsetY: 0 },
+      //       duration: 1,
+      //       ease: "power2.out",
+      //     });
+      //   },
+      // });
     });
 
     return {
@@ -71,10 +70,13 @@ export default {
 </script>
 
 <template>
-  <div class="first-background">
+  <div class="banner-animation">
     <div class="imgs">
       <img v-for="i in 5" :key="i" :src="bannerImg" class="img" />
     </div>
+  </div>
+
+  <div class="body">
     <div class="banner-container">
       <div class="components">
         <div class="left">
@@ -123,17 +125,25 @@ export default {
         </div>
       </div>
     </div>
-    <div class="artist-contrainer">
+
+    <div class="block-200"></div>
+
+    <div class="artist-container">
       <div class="left">
-        <div class="top">
-          <h1>徐碧姿</h1>
-          <h3>Hsu Pei-Tzu</h3>
-        </div>
-        <div class="bottom">
-          藝術家李貞慧。 永遠的母親、妻子、女兒。教授。創作者。
-          柔軔如藤、昂揚似松。 她追逐光影，調皮如精靈玩弄顏料;
-          她感悟生命，內觀自省、悠然自得。 其作品於一筆一畫間完成禪修般的頓悟，
-          自成生命第三境界。 (文/游惠遠)
+        <div class="text-content">
+          <div class="texts">
+            <div class="top">
+              <h1>徐碧姿</h1>
+              <h3>Hsu Pei-Tzu</h3>
+            </div>
+            <div class="bottom">
+              藝術家李貞慧。 永遠的母親、妻子、女兒。教授。創作者。
+              柔軔如藤、昂揚似松。 她追逐光影，調皮如精靈玩弄顏料;
+              她感悟生命，內觀自省、悠然自得。
+              其作品於一筆一畫間完成禪修般的頓悟， 自成生命第三境界。
+              (文/游惠遠)
+            </div>
+          </div>
         </div>
       </div>
       <div class="right"></div>
@@ -147,26 +157,35 @@ export default {
   height: 500vh;
   width: 100%;
 }
-.first-background {
+
+.banner-animation {
+  width: 100%;
   height: 100vh;
   overflow: hidden;
-}
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  .imgs {
+    display: flex;
+    white-space: nowrap;
+    img {
+      height: 100vh;
+      margin-left: -1px;
 
-.imgs {
-  display: flex;
-  white-space: nowrap;
-  img {
-    height: 100vh;
-    margin-left: -1px;
-
-    &:nth-child(2n) {
-      transform: scaleX(-1);
+      &:nth-child(2n) {
+        transform: scaleX(-1);
+      }
     }
   }
 }
 
+.body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 .banner-container {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -174,6 +193,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
   .components {
     //   max-width: 1600px;
     width: 100%;
@@ -250,6 +270,7 @@ export default {
       display: flex;
       justify-content: flex-end;
       align-items: center;
+      position: relative;
       .text-content {
         background: linear-gradient(to left, #efebe5 80%, transparent);
         p {
@@ -261,11 +282,29 @@ export default {
   }
 }
 
-.artist-contrainer {
+.artist-container {
   height: 100vh;
   width: 100%;
-  background-color: #7e7e7e;
-  position: relative;
-  z-index: 999;
+  display: flex;
+  .left {
+    position: relative;
+    height: 100vh;
+    width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    .text-content {
+      background: linear-gradient(to right, #efebe5 80%, transparent);
+      .texts {
+        padding: 80px 110px 80px 50px;
+      }
+    }
+  }
+}
+
+.block-200 {
+  height: 200px;
+  width: 100%;
 }
 </style>
