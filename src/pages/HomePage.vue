@@ -79,8 +79,8 @@ export default {
       <div class="components">
         <div class="left">
           <div class="top">
-            <h1>Eternal Weavings</h1>
-            <h1>Eternal Weavings</h1>
+            <h1>Seaport Handicrafts</h1>
+            <h1>Seaport Handicrafts</h1>
             <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
           </div>
           <div class="bottom">
