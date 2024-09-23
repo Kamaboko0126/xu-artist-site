@@ -10,7 +10,7 @@ export default {
 
 <style>
 :root {
-  --logo-padding: 80px;
+  --logo-padding: 60px;
   --banner-main-font-size: 35px;
   --banner-second-font-size: 30.5px;
   --banner-left-width: 430px;
