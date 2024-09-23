@@ -82,7 +82,11 @@ export default {
           0
         );
         if (index === 0) {
-          tl.fromTo([".right", ".right"], { xPercent: 100 }, { xPercent: 0 });
+          tl.fromTo(
+            [".right", ".right"],
+            { xPercent: 100, opacity: 0 },
+            { xPercent: 0, opacity: 1, ease: "power4.out" }
+          );
         }
 
         currentIndex = index;
@@ -197,8 +201,20 @@ export default {
   <section class="second">
     <div class="outer">
       <div class="inner">
-        <div class="bg">
-          <h2 class="section-heading">Animated with GSAP</h2>
+        <div class="bg second">
+          <div class="texts">
+            <div class="top">
+              <h1>徐碧姿</h1>
+              <h3>Hsu Pei-Tzu</h3>
+            </div>
+            <div class="bottom">
+              藝術家李貞慧。 永遠的母親、妻子、女兒。教授。創作者。
+              柔軔如藤、昂揚似松。 她追逐光影，調皮如精靈玩弄顏料;
+              她感悟生命，內觀自省、悠然自得。
+              其作品於一筆一畫間完成禪修般的頓悟， 自成生命第三境界。
+              (文/游惠遠)
+            </div>
+          </div>
         </div>
       </div>
     </div>
