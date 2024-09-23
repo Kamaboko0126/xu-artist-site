@@ -9,6 +9,7 @@ export default {
   setup() {
     const bannerImg = ref(require("@/assets/banner.jpg"));
     const iconImg = ref(require("@/assets/icon.png"));
+    const artistImg = ref(require("@/assets/artist.jpg"));
     onMounted(async () => {
       gsap.registerPlugin(ScrollTrigger, Observer);
 
@@ -83,7 +84,7 @@ export default {
         );
         if (index === 0) {
           tl.fromTo(
-            [".right", ".right"],
+            [".bg.first .right", ".bg.first .right"],
             { xPercent: 100, opacity: 0 },
             { xPercent: 0, opacity: 1, ease: "power4.out" }
           );
@@ -102,37 +103,12 @@ export default {
       });
 
       gotoSection(0, 1);
-
-      // tl.from(".right", {
-      //   scrollTrigger: {
-      //     start: "top top", // 當 .right 元素的頂部進入視窗底部時觸發
-      //     end: "+=800", // 當 .right 元素的頂部到達視窗中心時結束
-      //     snap: 1, // 捲動時每次滾動 1/4 螢幕寬度
-      //     scrub: true, // 平滑滾動
-      //     pin: ".banner-container", // 固定 .right 元素
-      //   },
-      //   x: window.innerWidth, // 從螢幕右邊滑入
-      //   duration: 1,
-      //   ease: "power2.out",
-      // });
-
-      // ScrollTrigger.create({
-      //   trigger: ".block-100",
-      //   start: "center bottom",
-      //   markers: true,
-      //   onEnter: () => {
-      //     gsap.to(window, {
-      //       scrollTo: { y: ".artist-container", offsetY: 0 },
-      //       duration: 1,
-      //       ease: "power2.out",
-      //     });
-      //   },
-      // });
     });
 
     return {
       bannerImg,
       iconImg,
+      artistImg,
     };
   },
 };
@@ -202,7 +178,7 @@ export default {
     <div class="outer">
       <div class="inner">
         <div class="bg second">
-          <div class="texts">
+          <div class="left">
             <div class="top">
               <h1>徐碧姿</h1>
               <h3>Hsu Pei-Tzu</h3>
@@ -214,6 +190,9 @@ export default {
               其作品於一筆一畫間完成禪修般的頓悟， 自成生命第三境界。
               (文/游惠遠)
             </div>
+          </div>
+          <div class="right">
+            <img :src="artistImg" />
           </div>
         </div>
       </div>
@@ -441,6 +420,30 @@ section {
           padding: 80px 50px 80px 110px;
         }
       }
+    }
+  }
+}
+
+.bg.second {
+  .left {
+    width: 35%;
+    display: flex;
+    flex-direction: column;
+    padding: 80px 110px 80px 50px;
+    background: linear-gradient(to right, #efebe5ae 80%, transparent);
+    .top {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+    }
+  }
+  .right {
+    width: 65%;
+    height: 100%;
+    padding: 50px;
+    overflow: hidden;
+    img{
+      width: 100%;
     }
   }
 }
