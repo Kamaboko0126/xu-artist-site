@@ -1,7 +1,8 @@
 .DS_Store
 node_modules
 /dist
-
+/src/assets/flat/origin
+/src/assets/solid/origin
 
 # local env files
 .env.local

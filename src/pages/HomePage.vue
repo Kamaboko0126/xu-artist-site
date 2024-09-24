@@ -10,6 +10,44 @@ export default {
     const bannerImg = ref(require("@/assets/banner.jpg"));
     const iconImg = ref(require("@/assets/icon.png"));
     const artistImg = ref(require("@/assets/artist.jpg"));
+    const artworkImgs = ref([]);
+
+    // 動態引入 assets/flat 和 assets/solid 目錄中的所有圖片
+    const flatImages = require
+      .context("@/assets/flat", false, /\.(png|jpg)$/)
+      .keys()
+      .map((key) =>
+        require(`@/assets/flat/normalized/${key.replace("./", "")}`)
+      );
+    const solidImages = require
+      .context("@/assets/solid", false, /\.(png|jpg)$/)
+      .keys()
+      .map((key) =>
+        require(`@/assets/solid/normalized/${key.replace("./", "")}`)
+      );
+
+    // 合併並打亂圖片
+    artworkImgs.value = [...flatImages, ...solidImages].sort(
+      () => Math.random() - 0.5
+    );
+    console.log("flatImages:", artworkImgs.value);
+
+    // 合併並打亂圖片
+    let allImages = [...flatImages, ...solidImages].sort(
+      () => Math.random() - 0.5
+    );
+
+    // 計算每份的大小，並去掉尾數
+    const partitionSize = Math.floor(allImages.length / 6);
+    allImages = allImages.slice(0, partitionSize * 6);
+
+    // 分成 6 等份
+    for (let i = 0; i < 6; i++) {
+      artworkImgs.value.push(
+        allImages.slice(i * partitionSize, (i + 1) * partitionSize)
+      );
+    }
+
     onMounted(async () => {
       gsap.registerPlugin(ScrollTrigger, Observer);
 
@@ -22,9 +60,9 @@ export default {
         imgElement.onload = () => {
           const imgWidth = imgElement.offsetWidth - 1;
           console.log("imgWidth:", imgWidth); // 確認 imgWidth 是否正確
-          tl.to(".imgs", {
+          tl.to(".banner-animation .imgs", {
             scrollTrigger: {
-              trigger: ".imgs",
+              trigger: ".banner-animation .imgs",
             },
             x: -imgWidth * 2,
             duration: 200,
@@ -85,8 +123,33 @@ export default {
         if (index === 0) {
           tl.fromTo(
             [".bg.first .right", ".bg.first .right"],
-            { xPercent: 100, opacity: 0 },
+            { xPercent: 40, opacity: 0 },
             { xPercent: 0, opacity: 1, ease: "power4.out" }
+          );
+        }
+        console.log("index:", index);
+        if (index === 1) {
+          tl.fromTo(
+            [".bg.second .right .background", ".bg.second .right .background"],
+            { xPercent: 40, opacity: 0 },
+            { xPercent: 0, opacity: 1, ease: "power2.out", duration: 0.8 }
+          );
+          tl.fromTo(
+            [".bg.second .right .img", ".bg.second .right .img"],
+            { xPercent: 70, opacity: 0 },
+            { xPercent: 0, opacity: 1, ease: "power2.out", duration: 1.3 }
+          );
+          tl.fromTo(
+            [".bg.second .left .top", ".bg.second .left .top"],
+            { yPercent: 130, opacity: 0 },
+            { yPercent: 0, opacity: 1, ease: "power4.out", duration: 1.3 },
+            "<"
+          );
+          tl.fromTo(
+            [".bg.second .left .bottom", ".bg.second .left .bottom"],
+            { yPercent: 40, opacity: 0 },
+            { yPercent: 0, opacity: 1, ease: "power4.out", duration: 1 },
+            "<"
           );
         }
 
@@ -109,6 +172,7 @@ export default {
       bannerImg,
       iconImg,
       artistImg,
+      artworkImgs,
     };
   },
 };
@@ -128,7 +192,7 @@ export default {
       <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
     </div>
   </header>
-  <section class="first">
+  <!-- <section class="first">
     <div class="outer">
       <div class="inner">
         <div class="bg first">
@@ -156,17 +220,9 @@ export default {
           <div class="right" id="right">
             <div class="text-content">
               <p>
-                　　人說：「女人四十一枝花，我八十初頭了」，取名為「二蕊花阿嬤藝術家」；學藝術的職業婦
-                女相當艱辛，在傳統父權至上的家庭更為如此，因此有一股不服輸的精神，所以毅然走
-                上……藝術創作之路。<br />
-                　　在學習歷程中，跟著廖明依老師學習，從工筆花鳥到膠彩畫。幸運的我，當年畫作參加
-                兩次中部美展皆得獎，台中縣美展連續三年獲得前三名，因此成為永久免審藝術家，每
-                年都受邀中縣美展，縣市合併後就受邀參加台中市大墩文化中心的女性藝術家聯展。<br />
-                　　爾後每年臺中市女性藝術家聯展、松柏國民美展，就成為我生命中最值得分享的經驗
-                。之後又接觸結藝編織，是受到娘家姪女(徐秀鑾)的鼓舞；剛開始做一些小鑰匙圈與人結
-                緣，朋友們看到覺得很精緻，鼓勵我拿去參展。近年來與膠彩畫的玉美、瑞瓊、真真、佳
-                以、文珍、秀梅，等同事朋友共組124畫會研究創作，相互學習鼓勵，開啟女性藝術家藝術
-                文化薪傳的秘密基地—中央路女性藝術家畫室。
+                　　人說：「女人四十一枝花，我八十初頭了」，取名為「二蕊花阿嬤藝術家」；學藝術的職業婦女相當艱辛，在傳統父權至上的家庭更為如此，因此有一股不服輸的精神，所以毅然走上……藝術創作之路。<br /><br />
+                　　在學習歷程中，跟著廖明依老師學習，從工筆花鳥到膠彩畫。幸運的我，當年畫作參加兩次中部美展皆得獎，台中縣美展連續三年獲得前三名，因此成為永久免審藝術家，每年都受邀中縣美展，縣市合併後就受邀參加台中市大墩文化中心的女性藝術家聯展。<br /><br />
+                　　爾後每年臺中市女性藝術家聯展、松柏國民美展，就成為我生命中最值得分享的經驗。之後又接觸結藝編織，是受到娘家姪女(徐秀鑾)的鼓舞；剛開始做一些小鑰匙圈與人結緣，朋友們看到覺得很精緻，鼓勵我拿去參展。近年來與膠彩畫的玉美、瑞瓊、真真、佳以、文珍、秀梅，等同事朋友共組124畫會研究創作，相互學習鼓勵，開啟女性藝術家藝術文化薪傳的秘密基地—中央路女性藝術家畫室。
               </p>
             </div>
           </div>
@@ -184,82 +240,38 @@ export default {
               <h3>Hsu Pei-Tzu</h3>
             </div>
             <div class="bottom">
-              藝術家李貞慧。 永遠的母親、妻子、女兒。教授。創作者。
-              柔軔如藤、昂揚似松。 她追逐光影，調皮如精靈玩弄顏料;
-              她感悟生命，內觀自省、悠然自得。
-              其作品於一筆一畫間完成禪修般的頓悟， 自成生命第三境界。
-              (文/游惠遠)
+              <div class="text-content">
+                <p>
+                  徐老師的編織結藝最與眾不同的是，她將膠彩畫的發光礦物顏料與多色顏料結合於編織作品中，用她敏銳獨到的觀察力，從生活中的花草、蟲、魚、蝶、蔬果等觀察，尋找最貼近生活的題材，在日常的生活中尋找俯拾即是的美感，並運用其巧手編織將所見轉化爲更具美與意的創作，並藉此表達對自然的關懷。
+                  (文/柯丁祺)
+                </p>
+              </div>
             </div>
           </div>
           <div class="right">
-            <img :src="artistImg" />
+            <div class="background"></div>
+            <div
+              class="img"
+              :style="{ 'background-image': `url(${artistImg})` }"
+            ></div>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!--<section class="third">
-    <div class="outer">
-      <div class="inner">
-        <div class="bg">
-          <h2 class="section-heading">GreenSock</h2>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="fourth">
-    <div class="outer">
-      <div class="inner">
-        <div class="bg">
-          <h2 class="section-heading">Animation platform</h2>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section class="fifth">
-    <div class="outer">
-      <div class="inner">
-        <div class="bg">
-          <h2 class="section-heading">Keep scrolling</h2>
         </div>
       </div>
     </div>
   </section> -->
-
-  <!-- <div class="body">
-    <div class="banner-container">
-      <div class="components">
-        <div class="left">
-          <div class="top">
-          </div>
-          
-        </div>
-      </div>
-    </div>
-
-    <div class="block-200"></div>
-
-    <div class="artist-container">
-      <div class="left">
-        <div class="text-content">
-          <div class="texts">
-            <div class="top">
-              <h1>徐碧姿</h1>
-              <h3>Hsu Pei-Tzu</h3>
-            </div>
-            <div class="bottom">
-              藝術家李貞慧。 永遠的母親、妻子、女兒。教授。創作者。
-              柔軔如藤、昂揚似松。 她追逐光影，調皮如精靈玩弄顏料;
-              她感悟生命，內觀自省、悠然自得。
-              其作品於一筆一畫間完成禪修般的頓悟， 自成生命第三境界。
-              (文/游惠遠)
+  <section class="third">
+    <div class="outer">
+      <div class="inner">
+        <div class="bg third">
+          <div class="container">
+            <div class="imgs">
+              <img v-for="img in artworkImgs" :key="img" :src="img" />
             </div>
           </div>
         </div>
       </div>
-      <div class="right"></div>
     </div>
-  </div> -->
+  </section>
 </template>
 
 <style scoped lang="scss">
@@ -268,7 +280,7 @@ export default {
   height: 100vh;
   overflow: hidden;
   position: fixed;
-  z-index: -1;
+  z-index: -2;
   top: 0;
   left: 0;
   .imgs {
@@ -435,15 +447,58 @@ section {
       display: flex;
       justify-content: flex-start;
       align-items: flex-end;
+      h1 {
+        letter-spacing: 5px;
+        overflow: hidden;
+      }
+      h3 {
+        margin-left: 5px;
+        color: #9f886b;
+      }
     }
   }
   .right {
     width: 65%;
     height: 100%;
-    padding: 50px;
+    // padding: 100px 80px 100px 0;
     overflow: hidden;
-    img{
-      width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    .background {
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      right: 0;
+      width: 40%;
+      height: 100%;
+      clip-path: polygon(46% 0, 100% 0, 100% 100%, 0% 100%);
+      background: #efebe5;
+      box-shadow: inset 0 25px 50px -25px rgba(0, 0, 0, 0.2);
+    }
+    .img {
+      width: 80%;
+      height: 80%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+}
+
+.bg.third {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #efebe5;
+  .container {
+    height: 100vh;
+    display: flex;
+    .imgs {
+      display: grid;
+      grid-template-columns: 14ch repeat(auto-fill, minmax(28ch, 1fr)) 14ch;
+      grid-template-rows: masonry;
+      gap: 1rem;
     }
   }
 }
@@ -451,130 +506,4 @@ section {
 h2 * {
   will-change: transform;
 }
-</style>
-
-<style scoped lang="scss">
-// .body {
-//   width: 100%;
-//   overflow-x: hidden;
-// }
-
-// .banner-container {
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   height: 100vh;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   overflow: hidden;
-//   .components {
-//     //   max-width: 1600px;
-//     width: 100%;
-//     top: 0;
-//     left: 0;
-//     display: flex;
-//     .left {
-//       width: var(--banner-left-width);
-//       .top {
-//         position: absolute;
-//         padding: var(--logo-padding) 0 0 var(--logo-padding);
-//         h1 {
-//           text-transform: uppercase;
-//           font-family: "Playfair Display";
-//           line-height: normal;
-//           font-weight: 500;
-//           font-size: var(--banner-main-font-size);
-//           &:nth-child(2) {
-//             color: #9f886b;
-//           }
-//         }
-//         h6 {
-//           font-family: "Qwigley";
-//           font-size: var(--banner-second-font-size);
-//           font-weight: 400;
-//         }
-//       }
-//       .bottom {
-//         position: absolute;
-//         bottom: 0;
-//         left: 0;
-//         padding: 0 0 var(--logo-padding) var(--logo-padding);
-//         display: flex;
-//         align-items: center;
-//         ul {
-//           display: flex;
-//           li {
-//             list-style: none;
-//             margin: 0;
-//             padding: 0;
-//             font-weight: 600;
-//             color: #232323;
-//             flex-shrink: 0;
-//           }
-//         }
-//         .rotated-text {
-//           font-family: "Playfair Display" !important;
-//           writing-mode: vertical-rl;
-//           justify-content: center;
-//           align-items: center;
-//           flex-shrink: 0;
-//           height: 35vh;
-//           li:not(:first-child) {
-//             margin-top: 5px;
-//           }
-//         }
-//         .vertical-text {
-//           line-height: normal;
-//           height: 100%;
-//           flex-direction: column;
-//           align-items: center;
-//           justify-content: space-between;
-//           padding: 15px 25px 15px 0;
-//           height: 35vh;
-//         }
-//         img {
-//           height: 40vh;
-//         }
-//       }
-//     }
-//     .right {
-//       height: 100vh;
-//       width: calc(100% - var(--banner-left-width));
-//       display: flex;
-//       justify-content: flex-end;
-//       align-items: center;
-//       position: relative;
-//       .text-content {
-//         background: linear-gradient(to left, #efebe5 80%, transparent);
-//         p {
-//           max-width: 1000px;
-//           padding: 80px 50px 80px 110px;
-//         }
-//       }
-//     }
-//   }
-// }
-
-// .artist-container {
-//   height: 100vh;
-//   width: 100%;
-//   display: flex;
-//   .left {
-//     position: relative;
-//     height: 100vh;
-//     width: 50%;
-//     display: flex;
-//     justify-content: flex-start;
-//     align-items: center;
-//     position: relative;
-//     .text-content {
-//       background: linear-gradient(to right, #efebe5 80%, transparent);
-//       .texts {
-//         padding: 80px 110px 80px 50px;
-//       }
-//     }
-//   }
-// }
-//
 </style>
