@@ -192,7 +192,7 @@ export default {
       <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
     </div>
   </header>
-  <!-- <section class="first">
+  <section class="first">
     <div class="outer">
       <div class="inner">
         <div class="bg first">
@@ -258,7 +258,7 @@ export default {
         </div>
       </div>
     </div>
-  </section> -->
+  </section>
   <section class="third">
     <div class="outer">
       <div class="inner">
