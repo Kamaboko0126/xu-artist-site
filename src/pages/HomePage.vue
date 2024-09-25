@@ -16,11 +16,15 @@ export default {
     const flatImages = require
       .context("@/assets/flat/normalized/", false, /\.(png|jpe?g|svg)$/)
       .keys()
-      .map((key) => require(`@/assets/flat/normalized/${key.replace("./", "")}`));
+      .map((key) =>
+        require(`@/assets/flat/normalized/${key.replace("./", "")}`)
+      );
     const solidImages = require
       .context("@/assets/solid/normalized/", false, /\.(png|jpe?g|svg)$/)
       .keys()
-      .map((key) => require(`@/assets/solid/normalized/${key.replace("./", "")}`));
+      .map((key) =>
+        require(`@/assets/solid/normalized/${key.replace("./", "")}`)
+      );
 
     // 合併並打亂圖片
     artworkImgs.value = [...flatImages, ...solidImages].sort(
@@ -53,6 +57,13 @@ export default {
       } else {
         console.error("imgElement not found");
       }
+
+      gsap.fromTo(
+        [".bg.third .container .imgs", ".bg.third .container .imgs"],
+        { yPercent: 0 },
+        { yPercent: -95, duration: 140, ease: "linear", repeat: -1 },
+        "<"
+      );
 
       let sections = document.querySelectorAll("section"),
         images = document.querySelectorAll(".bg"),
@@ -132,13 +143,6 @@ export default {
             "<"
           );
         }
-        if (index === 2){
-          tl.fromTo(
-            [".bg.third .container .imgs", ".bg.third .container .imgs"],
-            {xPercent:0},
-            {xPercent:90,duration:100}
-          )
-        }
 
         currentIndex = index;
       }
@@ -179,7 +183,7 @@ export default {
       <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
     </div>
   </header>
-  <!-- <section class="first">
+  <section class="first">
     <div class="outer">
       <div class="inner">
         <div class="bg first">
@@ -245,16 +249,27 @@ export default {
         </div>
       </div>
     </div>
-  </section> -->
+  </section>
   <section class="third">
     <div class="outer">
       <div class="inner">
         <div class="bg third">
+          <div class="header-block"></div>
           <div class="container">
             <div class="imgs">
               <img v-for="img in artworkImgs" :key="img" :src="img" />
             </div>
           </div>
+          <div class="bottom-block"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="fourth">
+    <div class="outer">
+      <div class="inner">
+        <div class="bg fourth">
+          <h1>這是footer，放一些展覽的資訊，如:時間、地點等</h1>
         </div>
       </div>
     </div>
@@ -324,13 +339,15 @@ header {
     line-height: normal;
     font-weight: 500;
     font-size: var(--banner-main-font-size);
+    color: #ffffff;
     &:nth-child(2) {
-      color: #9f886b;
+      color: #f8bc6e;
     }
   }
   h6 {
     font-family: "Qwigley";
     font-size: var(--banner-second-font-size);
+    color: #fff;
     font-weight: 400;
   }
 }
@@ -461,7 +478,7 @@ section {
       height: 100%;
       clip-path: polygon(46% 0, 100% 0, 100% 100%, 0% 100%);
       background: #efebe5;
-      box-shadow: inset 0 25px 50px -25px rgba(0, 0, 0, 0.2);
+      // background: linear-gradient(to bottom, #efebe5 70%, #efebe5b6);
     }
     .img {
       width: 80%;
@@ -478,21 +495,46 @@ section {
   height: 100vh;
   overflow: hidden;
   background: #efebe5;
+  .header-block {
+    height: calc((var(--logo-padding) * 2) + 100px);
+    width: 100%;
+    background: linear-gradient(to bottom, #efebe5 30%, transparent);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+  .bottom-block {
+    height: calc(20px);
+    background: #efebe5;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+  }
   .container {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
     .imgs {
-      padding: 10% 2%;
+      padding: 1rem;
       column-count: 6;
-      column-gap: 2%;
+      column-gap: 1rem;
       width: 100%;
-      margin: 0 auto;
+      margin: 1rem auto;
       img {
         width: 100%;
+        padding: 0.5rem 0;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+        transition-delay: 0.3s;
       }
     }
   }
+}
+.bg.fourth {
+  background: #efebe5;
 }
 
 h2 * {
