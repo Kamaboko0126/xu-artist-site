@@ -437,6 +437,8 @@ section {
       padding: 0 0 var(--logo-padding) calc(var(--logo-padding) + 25px);
       @media (max-width: 1100px) {
         width: 100%;
+        padding: 0 0 calc(var(--logo-padding) + 25px)
+          calc(var(--logo-padding) + 25px);
       }
       img {
         height: 40vh;
@@ -489,11 +491,14 @@ section {
 }
 .bg.second {
   .left {
-    width: 35%;
+    width: 40%;
     display: flex;
     flex-direction: column;
     padding: 60px 110px 60px 50px;
     background: linear-gradient(to right, #efebe5ae 80%, transparent);
+    @media (min-width: 1300px) {
+      transform: translateY(40px);
+    }
     .top {
       display: flex;
       justify-content: flex-start;
@@ -509,7 +514,7 @@ section {
     }
   }
   .right {
-    width: 65%;
+    width: 60%;
     height: 100%;
     // padding: 100px 80px 100px 0;
     overflow: hidden;
