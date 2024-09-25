@@ -11,6 +11,7 @@ export default {
     const iconImg = ref(require("@/assets/icon.png"));
     const artistImg = ref(require("@/assets/artist.jpg"));
     const artworkImgs = ref([]);
+    const logoColor = ref("");
 
     // 動態引入 assets/flat 和 assets/solid 目錄中的所有圖片
     const flatImages = require
@@ -30,7 +31,7 @@ export default {
     artworkImgs.value = [...flatImages, ...solidImages].sort(
       () => Math.random() - 0.5
     );
-    console.log("artworkImgs:", artworkImgs.value);
+    // console.log("artworkImgs:", artworkImgs.value);
 
     onMounted(async () => {
       gsap.registerPlugin(ScrollTrigger, Observer);
@@ -43,7 +44,7 @@ export default {
       if (imgElement) {
         imgElement.onload = () => {
           const imgWidth = imgElement.offsetWidth - 1;
-          console.log("imgWidth:", imgWidth); // 確認 imgWidth 是否正確
+          // console.log("imgWidth:", imgWidth); // 確認 imgWidth 是否正確
           tl.to(".banner-animation .imgs", {
             scrollTrigger: {
               trigger: ".banner-animation .imgs",
@@ -78,7 +79,6 @@ export default {
 
       function gotoSection(index, direction) {
         index = wrap(index); // make sure it's valid
-        console.log(index, direction);
         animating = true;
         let fromTop = direction === -1,
           dFactor = fromTop ? -1 : 1,
@@ -145,6 +145,20 @@ export default {
         }
 
         currentIndex = index;
+        if (index === 2) {
+          gsap.fromTo(
+            [".header-container", ".header-container"],
+            { opacity: 1 },
+            { opacity: 0 }
+          );
+        } else {
+          gsap.to(".header-container", { opacity: 1 });
+        }
+        if (index === 3) {
+          logoColor.value = "#000";
+        } else {
+          logoColor.value = "#fff";
+        }
       }
 
       Observer.create({
@@ -164,6 +178,7 @@ export default {
       iconImg,
       artistImg,
       artworkImgs,
+      logoColor,
     };
   },
 };
@@ -178,9 +193,11 @@ export default {
 
   <header>
     <div class="header-container">
+      <h1 :style="{ color: logoColor }">Seaport Handicrafts</h1>
       <h1>Seaport Handicrafts</h1>
-      <h1>Seaport Handicrafts</h1>
-      <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
+      <h6 :style="{ color: logoColor }">
+        - Contemporary Knot Art of Hsu Pei-Tzu -
+      </h6>
     </div>
   </header>
   <section class="first">
@@ -188,7 +205,7 @@ export default {
       <div class="inner">
         <div class="bg first">
           <div class="left">
-            <ul class="rotated-text">
+            <!-- <ul class="rotated-text">
               <li>Contemporary</li>
               <li>Knot</li>
               <li>Art</li>
@@ -204,7 +221,7 @@ export default {
               <li>藝</li>
               <li>編</li>
               <li>織</li>
-            </ul>
+            </ul> -->
             <img :src="iconImg" />
           </div>
 
@@ -332,14 +349,16 @@ header {
   justify-content: space-between;
   padding: var(--logo-padding) 0 0 var(--logo-padding);
   width: 100%;
-  z-index: 3;
+  z-index: 99;
+  transition: 1s;
   h1 {
     text-transform: uppercase;
     font-family: "Playfair Display";
     line-height: normal;
     font-weight: 500;
     font-size: var(--banner-main-font-size);
-    color: #ffffff;
+    color: #fff;
+    transition: 1s;
     &:nth-child(2) {
       color: #f8bc6e;
     }
@@ -347,8 +366,10 @@ header {
   h6 {
     font-family: "Qwigley";
     font-size: var(--banner-second-font-size);
-    color: #fff;
     font-weight: 400;
+    transition: 1s;
+    color: #fff;
+    transition: 1s;
   }
 }
 
@@ -445,7 +466,7 @@ section {
     width: 35%;
     display: flex;
     flex-direction: column;
-    padding: 80px 110px 80px 50px;
+    padding: 60px 110px 60px 50px;
     background: linear-gradient(to right, #efebe5ae 80%, transparent);
     .top {
       display: flex;
@@ -496,9 +517,10 @@ section {
   overflow: hidden;
   background: #efebe5;
   .header-block {
-    height: calc((var(--logo-padding) * 2) + 100px);
+    height: calc((var(--logo-padding) * 1.2) + 132px);
     width: 100%;
     background: linear-gradient(to bottom, #efebe5 30%, transparent);
+    // background: #efebe5;
     position: absolute;
     top: 0;
     left: 0;

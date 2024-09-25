@@ -14,6 +14,7 @@ export default {
   --banner-main-font-size: 35px;
   --banner-second-font-size: 30.5px;
   --banner-left-width: 430px;
+  --main-font-size: 15px;
 }
 * {
   margin: 0;
@@ -33,5 +34,6 @@ export default {
   margin-inline-start: 0px;
   margin-inline-end: 0px;
   unicode-bidi: isolate;
+  font-size: var(--main-font-size);
 }
 </style>
