@@ -75,6 +75,8 @@ export default {
         wrap = gsap.utils.wrap(0, sections.length),
         animating;
 
+      console.log("sections:", sections);
+
       gsap.set(outerWrappers, { yPercent: 100 });
       gsap.set(innerWrappers, { yPercent: -100 });
 
@@ -84,6 +86,16 @@ export default {
       });
 
       function gotoSection(index, direction) {
+        if (index === 1 && windowWidth.value > 1100 && direction === 1) {
+          index = 2;
+        } else if (
+          index === 1 &&
+          windowWidth.value > 1100 &&
+          direction === -1
+        ) {
+          index = 0;
+        }
+
         index = wrap(index); // make sure it's valid
         animating = true;
         let fromTop = direction === -1,
@@ -117,15 +129,30 @@ export default {
           { yPercent: 0 },
           0
         );
-        if (index === 0) {
+
+        currentIndex = index;
+        // console.log("index:", index);
+
+        if (index === 0 && windowWidth.value > 1100) {
           tl.fromTo(
             [".bg.first .right", ".bg.first .right"],
             { xPercent: 40, opacity: 0 },
             { xPercent: 0, opacity: 1, ease: "power4.out" }
           );
+          logoColor.value = "#fff";
+        } else if (index === 0 && windowWidth.value < 1100) {
+          logoColor.value = "#fff";
         }
-        console.log("index:", index);
-        if (index === 1) {
+
+        if (index === 1 && windowWidth.value < 1100) {
+          logoColor.value = "#fff";
+        }
+        if (index === 1 && windowWidth.value < 500) {
+          gsap.to(".header-container", { opacity: 0 });
+          return;
+        }
+
+        if (index === 2 && windowWidth.value > 1100) {
           tl.fromTo(
             [".bg.second .right .background", ".bg.second .right .background"],
             { xPercent: 40, opacity: 0 },
@@ -148,34 +175,27 @@ export default {
             { yPercent: 0, opacity: 1, ease: "power4.out", duration: 1 },
             "<"
           );
+          logoColor.value = "#fff";
+        } else if (index === 2 && windowWidth.value < 1100) {
+          logoColor.value = "#000";
         }
 
-        currentIndex = index;
-        if (index === 2) {
-          gsap.fromTo(
-            [".header-container", ".header-container"],
-            { opacity: 1 },
-            { opacity: 0 }
-          );
+        if (index === 3) {
+          gsap.to(".header-container", { opacity: 0 });
         } else {
           gsap.to(".header-container", { opacity: 1 });
         }
-        if (index === 3) {
+
+        if (index === 4) {
           logoColor.value = "#000";
-        } else {
-          logoColor.value = "#fff";
         }
       }
 
       Observer.create({
         type: "wheel,touch,pointer",
         wheelSpeed: -1,
-        onDown: () =>
-          !animating &&
-          gotoSection(currentIndex - 1, -1),
-        onUp: () =>
-          !animating &&
-          gotoSection(currentIndex + 1, 1),
+        onDown: () => !animating && gotoSection(currentIndex - 1, -1),
+        onUp: () => !animating && gotoSection(currentIndex + 1, 1),
         tolerance: 10,
         preventDefault: true,
       });
@@ -215,23 +235,6 @@ export default {
       <div class="inner">
         <div class="bg first">
           <div class="left">
-            <!-- <ul class="rotated-text">
-              <li>Contemporary</li>
-              <li>Knot</li>
-              <li>Art</li>
-              <li>of</li>
-              <li>Hsu</li>
-              <li>Pei-Tzu</li>
-            </ul>
-            <ul class="vertical-text">
-              <li>徐</li>
-              <li>碧</li>
-              <li>姿</li>
-              <li>結</li>
-              <li>藝</li>
-              <li>編</li>
-              <li>織</li>
-            </ul> -->
             <img :src="iconImg" />
           </div>
 
@@ -243,6 +246,21 @@ export default {
                 　　爾後每年臺中市女性藝術家聯展、松柏國民美展，就成為我生命中最值得分享的經驗。之後又接觸結藝編織，是受到娘家姪女(徐秀鑾)的鼓舞；剛開始做一些小鑰匙圈與人結緣，朋友們看到覺得很精緻，鼓勵我拿去參展。近年來與膠彩畫的玉美、瑞瓊、真真、佳以、文珍、秀梅，等同事朋友共組124畫會研究創作，相互學習鼓勵，開啟女性藝術家藝術文化薪傳的秘密基地—中央路女性藝術家畫室。
               </p>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="second-for-phone">
+    <div class="outer">
+      <div class="inner">
+        <div class="bg second-for-phone">
+          <div class="text-content">
+            <p>
+              　　人說：「女人四十一枝花，我八十初頭了」，取名為「二蕊花阿嬤藝術家」；學藝術的職業婦女相當艱辛，在傳統父權至上的家庭更為如此，因此有一股不服輸的精神，所以毅然走上……藝術創作之路。<br /><br />
+              　　在學習歷程中，跟著廖明依老師學習，從工筆花鳥到膠彩畫。幸運的我，當年畫作參加兩次中部美展皆得獎，台中縣美展連續三年獲得前三名，因此成為永久免審藝術家，每年都受邀中縣美展，縣市合併後就受邀參加台中市大墩文化中心的女性藝術家聯展。<br /><br />
+              　　爾後每年臺中市女性藝術家聯展、松柏國民美展，就成為我生命中最值得分享的經驗。之後又接觸結藝編織，是受到娘家姪女(徐秀鑾)的鼓舞；剛開始做一些小鑰匙圈與人結緣，朋友們看到覺得很精緻，鼓勵我拿去參展。近年來與膠彩畫的玉美、瑞瓊、真真、佳以、文珍、秀梅，等同事朋友共組124畫會研究創作，相互學習鼓勵，開啟女性藝術家藝術文化薪傳的秘密基地—中央路女性藝術家畫室。
+            </p>
           </div>
         </div>
       </div>
@@ -301,14 +319,9 @@ export default {
       </div>
     </div>
   </section>
-  <div class="block"></div>
 </template>
 
 <style scoped lang="scss">
-.block {
-  width: 100%;
-  height: 100000px;
-}
 .banner-animation {
   width: 100%;
   height: 100vh;
@@ -366,6 +379,9 @@ header {
   width: 100%;
   z-index: 99;
   transition: 1s;
+  @media (max-width: 500px) {
+    padding: calc(var(--logo-padding) * 2) 0 0 var(--logo-padding);
+  }
   h1 {
     text-transform: uppercase;
     font-family: "Playfair Display";
@@ -414,42 +430,13 @@ section {
   .bg.first {
     .left {
       display: flex;
-      min-width: 450px;
       width: 30%;
       height: 100%;
       align-items: flex-end;
       justify-content: flex-start;
-      padding: 0 0 var(--logo-padding) var(--logo-padding);
-      ul {
-        display: flex;
-        li {
-          list-style: none;
-          margin: 0;
-          padding: 0;
-          font-weight: 600;
-          color: #fff;
-          flex-shrink: 0;
-        }
-      }
-      .rotated-text {
-        font-family: "Playfair Display" !important;
-        writing-mode: vertical-rl;
-        justify-content: center;
-        align-items: center;
-        flex-shrink: 0;
-        height: 35vh;
-        li:not(:first-child) {
-          margin-top: 5px;
-        }
-      }
-      .vertical-text {
-        line-height: normal;
-        height: 100%;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        padding: 15px 25px 15px 0;
-        height: 35vh;
+      padding: 0 0 var(--logo-padding) calc(var(--logo-padding) + 25px);
+      @media (max-width: 1100px) {
+        width: 100%;
       }
       img {
         height: 40vh;
@@ -460,6 +447,9 @@ section {
       justify-content: flex-end;
       align-items: center;
       width: 70%;
+      @media (max-width: 1100px) {
+        display: none;
+      }
       .text-content {
         width: 100%;
         // background: linear-gradient(to left, #efebe5ae 80%, transparent);
@@ -472,8 +462,9 @@ section {
         }
       }
     }
+
     @media (min-width: 1101px) {
-      .right .text-content p{
+      .right .text-content p {
         background: linear-gradient(to left, #efebe5ae 80%, transparent);
       }
     }
@@ -496,7 +487,6 @@ section {
     }
   }
 }
-
 .bg.second {
   .left {
     width: 35%;
@@ -543,6 +533,61 @@ section {
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+    }
+  }
+}
+
+@media (max-width: 1100px) {
+  .bg.second {
+    background: #efebe5;
+    .left {
+      width: 100%;
+      justify-content: center;
+      padding: 60px 40px 60px 50px;
+    }
+    .right {
+      width: 100%;
+      justify-content: center;
+      .background {
+        display: none;
+      }
+      .img {
+        width: 90%;
+        height: 90%;
+      }
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .bg.second {
+    flex-direction: column;
+    .left {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      width: 90%;
+      padding: 160px 0 0 0;
+      .bottom {
+        display: none;
+      }
+    }
+  }
+}
+
+.bg.second-for-phone {
+  .text-content {
+    width: 100%;
+    background: #efebe5ae;
+    padding: var(--logo-padding) 50px;
+    @media (max-width: 1300px) {
+      padding: var(--logo-padding) 40px;
+    }
+    @media (max-width: 900px) {
+      padding: var(--logo-padding) 30px;
+    }
+    @media (max-width: 500px) {
+      padding: var(--logo-padding) 20px;
     }
   }
 }

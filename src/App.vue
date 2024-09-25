@@ -15,8 +15,30 @@ export default {
   --main-font-size: 19px;
   --h1-size: 35px;
   --h6-size: 34px;
+  --line-height: 2.4;
+
   @media (max-width: 1300px) {
     --main-font-size: 17px;
+    --logo-padding: 55px;
+    --h1-size: 32px;
+    --h6-size: 32px;
+    --line-height: 1.9;
+  }
+
+  @media (max-width: 900px) {
+    --main-font-size: 17px;
+    --logo-padding: 50px;
+    --h1-size: 28px;
+    --h6-size: 28px;
+    --line-height: 1.6;
+  }
+
+  @media (max-width: 500px) {
+    --main-font-size: 14px;
+    --logo-padding: 18px;
+    --h1-size: 25px;
+    --h6-size: 25px;
+    --line-height: 1.9;
   }
 }
 * {
@@ -28,7 +50,7 @@ export default {
 }
 
 .text-content p {
-  line-height: 2.4;
+  line-height: var(--line-height);
   font-feature-settings: "palt" on;
   letter-spacing: 0.15em;
   display: block;
@@ -38,10 +60,8 @@ export default {
   margin-inline-end: 0px;
   unicode-bidi: isolate;
   font-size: var(--main-font-size);
-  @media (max-width: 1100px) {
-    line-height: 2;
-  }
 }
+
 h1 {
   font-size: var(--h1-size);
 }
