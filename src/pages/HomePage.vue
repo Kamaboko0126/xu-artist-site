@@ -14,39 +14,19 @@ export default {
 
     // 動態引入 assets/flat 和 assets/solid 目錄中的所有圖片
     const flatImages = require
-      .context("@/assets/flat", false, /\.(png|jpg)$/)
+      .context("@/assets/flat/normalized/", false, /\.(png|jpe?g|svg)$/)
       .keys()
-      .map((key) =>
-        require(`@/assets/flat/normalized/${key.replace("./", "")}`)
-      );
+      .map((key) => require(`@/assets/flat/normalized/${key.replace("./", "")}`));
     const solidImages = require
-      .context("@/assets/solid", false, /\.(png|jpg)$/)
+      .context("@/assets/solid/normalized/", false, /\.(png|jpe?g|svg)$/)
       .keys()
-      .map((key) =>
-        require(`@/assets/solid/normalized/${key.replace("./", "")}`)
-      );
+      .map((key) => require(`@/assets/solid/normalized/${key.replace("./", "")}`));
 
     // 合併並打亂圖片
     artworkImgs.value = [...flatImages, ...solidImages].sort(
       () => Math.random() - 0.5
     );
-    console.log("flatImages:", artworkImgs.value);
-
-    // 合併並打亂圖片
-    let allImages = [...flatImages, ...solidImages].sort(
-      () => Math.random() - 0.5
-    );
-
-    // 計算每份的大小，並去掉尾數
-    const partitionSize = Math.floor(allImages.length / 6);
-    allImages = allImages.slice(0, partitionSize * 6);
-
-    // 分成 6 等份
-    for (let i = 0; i < 6; i++) {
-      artworkImgs.value.push(
-        allImages.slice(i * partitionSize, (i + 1) * partitionSize)
-      );
-    }
+    console.log("artworkImgs:", artworkImgs.value);
 
     onMounted(async () => {
       gsap.registerPlugin(ScrollTrigger, Observer);
@@ -152,6 +132,13 @@ export default {
             "<"
           );
         }
+        if (index === 2){
+          tl.fromTo(
+            [".bg.third .container .imgs", ".bg.third .container .imgs"],
+            {xPercent:0},
+            {xPercent:90,duration:100}
+          )
+        }
 
         currentIndex = index;
       }
@@ -192,7 +179,7 @@ export default {
       <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
     </div>
   </header>
-  <section class="first">
+  <!-- <section class="first">
     <div class="outer">
       <div class="inner">
         <div class="bg first">
@@ -258,7 +245,7 @@ export default {
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
   <section class="third">
     <div class="outer">
       <div class="inner">
@@ -388,7 +375,7 @@ section {
           margin: 0;
           padding: 0;
           font-weight: 600;
-          color: #232323;
+          color: #fff;
           flex-shrink: 0;
         }
       }
@@ -492,13 +479,18 @@ section {
   overflow: hidden;
   background: #efebe5;
   .container {
+    width: 100%;
     height: 100vh;
-    display: flex;
+    overflow: hidden;
     .imgs {
-      display: grid;
-      grid-template-columns: 14ch repeat(auto-fill, minmax(28ch, 1fr)) 14ch;
-      grid-template-rows: masonry;
-      gap: 1rem;
+      padding: 10% 2%;
+      column-count: 6;
+      column-gap: 2%;
+      width: 100%;
+      margin: 0 auto;
+      img {
+        width: 100%;
+      }
     }
   }
 }
