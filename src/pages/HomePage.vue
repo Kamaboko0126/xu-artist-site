@@ -12,6 +12,7 @@ export default {
     const artistImg = ref(require("@/assets/artist.jpg"));
     const artworkImgs = ref([]);
     const logoColor = ref("");
+    const windowWidth = ref(window.innerWidth);
 
     // 動態引入 assets/flat 和 assets/solid 目錄中的所有圖片
     const flatImages = require
@@ -76,6 +77,11 @@ export default {
 
       gsap.set(outerWrappers, { yPercent: 100 });
       gsap.set(innerWrappers, { yPercent: -100 });
+
+      // 更新 windowWidth 當視窗大小改變時
+      window.addEventListener("resize", () => {
+        windowWidth.value = window.innerWidth;
+      });
 
       function gotoSection(index, direction) {
         index = wrap(index); // make sure it's valid
@@ -164,8 +170,12 @@ export default {
       Observer.create({
         type: "wheel,touch,pointer",
         wheelSpeed: -1,
-        onDown: () => !animating && gotoSection(currentIndex - 1, -1),
-        onUp: () => !animating && gotoSection(currentIndex + 1, 1),
+        onDown: () =>
+          !animating &&
+          gotoSection(currentIndex - 1, -1),
+        onUp: () =>
+          !animating &&
+          gotoSection(currentIndex + 1, 1),
         tolerance: 10,
         preventDefault: true,
       });
@@ -250,7 +260,7 @@ export default {
             <div class="bottom">
               <div class="text-content">
                 <p>
-                  徐老師的編織結藝最與眾不同的是，她將膠彩畫的發光礦物顏料與多色顏料結合於編織作品中，用她敏銳獨到的觀察力，從生活中的花草、蟲、魚、蝶、蔬果等觀察，尋找最貼近生活的題材，在日常的生活中尋找俯拾即是的美感，並運用其巧手編織將所見轉化爲更具美與意的創作，並藉此表達對自然的關懷。
+                  徐老師的編織結藝最與眾不同的是，她將膠彩畫的發光礦物顏料與多色顏料結合於編織作品中，用她敏銳獨到的觀察力，從生活中的花草、蟲、魚、蝶、蔬果等觀察，尋找最貼近生活的題材，在日常的生活中尋找俯拾即是的美感，並運用其巧手編織將所見轉化爲更具美與意的創作，並藉此表達對自然的關懷。<br />
                   (文/柯丁祺)
                 </p>
               </div>
@@ -291,9 +301,14 @@ export default {
       </div>
     </div>
   </section>
+  <div class="block"></div>
 </template>
 
 <style scoped lang="scss">
+.block {
+  width: 100%;
+  height: 100000px;
+}
 .banner-animation {
   width: 100%;
   height: 100vh;
@@ -356,7 +371,6 @@ header {
     font-family: "Playfair Display";
     line-height: normal;
     font-weight: 500;
-    font-size: var(--banner-main-font-size);
     color: #fff;
     transition: 1s;
     &:nth-child(2) {
@@ -365,7 +379,6 @@ header {
   }
   h6 {
     font-family: "Qwigley";
-    font-size: var(--banner-second-font-size);
     font-weight: 400;
     transition: 1s;
     color: #fff;
@@ -401,6 +414,7 @@ section {
   .bg.first {
     .left {
       display: flex;
+      min-width: 450px;
       width: 30%;
       height: 100%;
       align-items: flex-end;
@@ -448,13 +462,35 @@ section {
       width: 70%;
       .text-content {
         width: 100%;
-        background: linear-gradient(to left, #efebe5ae 80%, transparent);
+        // background: linear-gradient(to left, #efebe5ae 80%, transparent);
         display: flex;
         justify-content: flex-end;
         align-items: center;
         p {
           max-width: 1200px;
           padding: 80px 50px 80px 110px;
+        }
+      }
+    }
+    @media (min-width: 1101px) {
+      .right .text-content p{
+        background: linear-gradient(to left, #efebe5ae 80%, transparent);
+      }
+    }
+    @media (max-width: 1100px) {
+      overflow: none;
+
+      flex-direction: column;
+      width: 100%;
+      height: 100vh;
+      .left {
+        width: 100%;
+      }
+      .right {
+        width: 100%;
+        background: linear-gradient(to top, #efebe5ae 80%, transparent);
+        .text-content p {
+          padding: 110px 50px 80px 50px;
         }
       }
     }
@@ -545,6 +581,13 @@ section {
       column-gap: 1rem;
       width: 100%;
       margin: 1rem auto;
+      @media (max-width: 1400px) {
+        column-count: 4;
+      }
+      @media (max-width: 1000px) {
+        column-count: 2;
+      }
+
       img {
         width: 100%;
         padding: 0.5rem 0;

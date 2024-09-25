@@ -8,13 +8,16 @@ export default {
   <router-view></router-view>
 </template>
 
-<style>
+<style lang="scss">
 :root {
   --logo-padding: 60px;
-  --banner-main-font-size: 35px;
-  --banner-second-font-size: 30.5px;
   --banner-left-width: 430px;
-  --main-font-size: 15px;
+  --main-font-size: 19px;
+  --h1-size: 35px;
+  --h6-size: 34px;
+  @media (max-width: 1300px) {
+    --main-font-size: 17px;
+  }
 }
 * {
   margin: 0;
@@ -35,5 +38,15 @@ export default {
   margin-inline-end: 0px;
   unicode-bidi: isolate;
   font-size: var(--main-font-size);
+  @media (max-width: 1100px) {
+    line-height: 2;
+  }
+}
+h1 {
+  font-size: var(--h1-size);
+}
+
+h6 {
+  font-size: var(--h6-size);
 }
 </style>
