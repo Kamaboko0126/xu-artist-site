@@ -17,36 +17,22 @@ export default {
   --h6-size: 34px;
   --line-height: 2;
 
-  @media (max-width:1700px) {
-  --banner-left-width: 430px;
-  --main-font-size: 17px;
-  --h1-size: 35px;
-  --h6-size: 34px;
-  --line-height: 2;
+  @media (max-width: 1024px) {
+    --logo-padding: 60px;
+    --banner-left-width: 430px;
+    --main-font-size: 19px;
+    --h1-size: 35px;
+    --h6-size: 34px;
+    --line-height: 2;
   }
 
-  @media (max-width: 1500px) {
-    --main-font-size: 17px;
-    --logo-padding: 50px;
-    --h1-size: 30px;
-    --h6-size: 31px;
-    --line-height: 1.9;
-  }
-
-  @media (max-width: 900px) {
-    --main-font-size: 17px;
-    --logo-padding: 50px;
-    --h1-size: 28px;
-    --h6-size: 28px;
-    --line-height: 1.6;
-  }
-
-  @media (max-width: 500px) {
-    --main-font-size: 14px;
-    --logo-padding: 18px;
-    --h1-size: 25px;
-    --h6-size: 25px;
-    --line-height: 1.9;
+  @media (max-width: 768px) {
+    --logo-padding: 60px;
+    --banner-left-width: 430px;
+    --main-font-size: 19px;
+    --h1-size: 35px;
+    --h6-size: 34px;
+    --line-height: 2;
   }
 }
 * {

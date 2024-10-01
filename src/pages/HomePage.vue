@@ -63,7 +63,7 @@ export default {
       gsap.fromTo(
         [".bg.third .container .imgs", ".bg.third .container .imgs"],
         { yPercent: 0 },
-        { yPercent: -95, duration: 140, ease: "linear", repeat: -1 },
+        { yPercent: -95, duration: 250, ease: "linear", repeat: -1 },
         "<"
       );
 
@@ -603,9 +603,9 @@ section {
   overflow: hidden;
   background: #efebe5;
   .header-block {
-    height: calc((var(--logo-padding) * 1.2) + 132px);
+    height: calc((var(--logo-padding) * 1.2));
     width: 100%;
-    background: linear-gradient(to bottom, #efebe5 30%, transparent);
+    background: linear-gradient(to bottom, #efebe5 25%, transparent);
     // background: #efebe5;
     position: absolute;
     top: 0;
