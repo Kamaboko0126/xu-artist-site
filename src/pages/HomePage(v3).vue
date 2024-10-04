@@ -12,7 +12,7 @@ export default {
     const artistImg = ref(require("@/assets/artist.jpg"));
     const artworkImgs = ref([]);
     const logoColor = ref("");
-    const windowWidth = ref(window.innerWidth);
+    // const windowWidth = ref(window.innerWidth);
 
     // 動態引入 assets/flat 和 assets/solid 目錄中的所有圖片
     const flatImages = require
@@ -59,10 +59,10 @@ export default {
         console.error("imgElement not found");
       }
 
-      // 更新 windowWidth 當視窗大小改變時
-      window.addEventListener("resize", () => {
-        windowWidth.value = window.innerWidth;
-      });
+      // // 更新 windowWidth 當視窗大小改變時
+      // window.addEventListener("resize", () => {
+      //   windowWidth.value = window.innerWidth;
+      // });
 
       Observer.create({
         type: "wheel,touch,pointer",
@@ -121,7 +121,13 @@ export default {
         </p>
       </div>
     </section>
-    <section class="second"></section>
+    <section class="second">
+      <div class="container">
+        <div class="img first-img"></div>
+        <div class="img second-img"></div>
+        <div class="img third-img"></div>
+      </div>
+    </section>
     <section class="third"></section>
   </main>
 </template>
@@ -130,6 +136,88 @@ export default {
 * {
   box-sizing: border-box;
   user-select: none;
+}
+
+.loader {
+  position: fixed;
+  z-index: 99999;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  display: none;
+}
+.spinner {
+  --radius: 100;
+  --size: 50;
+  position: relative;
+  width: calc(var(--size) * 1px);
+  height: calc(var(--size) * 1px);
+  div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #474bff;
+    border-radius: 50%;
+    transform: rotate(calc(var(--angle) * 1deg))
+      translate(0, calc(var(--radius) * 0px));
+    animation: spinner-19rk4d 1.5s calc(var(--delay) * 1.2s) infinite ease;
+    &:nth-child(1) {
+      --angle: 45;
+      --delay: 0.1;
+    }
+    &:nth-child(2) {
+      --angle: 90;
+      --delay: 0.2;
+    }
+    &:nth-child(3) {
+      --angle: 135;
+      --delay: 0.3;
+    }
+
+    &:nth-child(4) {
+      --angle: 180;
+      --delay: 0.4;
+    }
+
+    &:nth-child(5) {
+      --angle: 225;
+      --delay: 0.5;
+    }
+
+    &:nth-child(6) {
+      --angle: 270;
+      --delay: 0.6;
+    }
+
+    &:nth-child(7) {
+      --angle: 315;
+      --delay: 0.7;
+    }
+
+    &:nth-child(8) {
+      --angle: 360;
+      --delay: 0.8;
+    }
+  }
+}
+@keyframes spinner-19rk4d {
+  0%,
+  30%,
+  50%,
+  100% {
+    transform: rotate(calc(var(--angle) * 1deg))
+      translate(0, calc(var(--radius) * 0px)) scale(0);
+  }
+
+  40% {
+    transform: rotate(calc(var(--angle) * 1deg))
+      translate(0, calc(var(--radius) * 1px)) scale(1);
+  }
 }
 
 header {
@@ -223,86 +311,50 @@ main {
     padding: 6vh 8vw 5vh 8vw;
   }
 }
-.loader {
-  position: fixed;
-  z-index: 99999;
-  height: 100vh;
-  width: 100%;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  display: none;
-}
 
-.spinner {
-  --radius: 100;
-  --size: 50;
-  position: relative;
-  width: calc(var(--size) * 1px);
-  height: calc(var(--size) * 1px);
-  div {
-    position: absolute;
+.second {
+  .container {
     width: 100%;
-    height: 100%;
-    background: #474bff;
-    border-radius: 50%;
-    transform: rotate(calc(var(--angle) * 1deg))
-      translate(0, calc(var(--radius) * 0px));
-    animation: spinner-19rk4d 1.5s calc(var(--delay) * 1.2s) infinite ease;
-    &:nth-child(1) {
-      --angle: 45;
-      --delay: 0.1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    .first-img {
+      width: 25vw;
+      height: 40vw;
+      background: url("@/assets/exhibition3.jpg") no-repeat 30% center;
+      background-size: cover;
+      clip-path: polygon(26% 0, 0 21%, 0 100%, 80% 100%, 100% 79%, 100% 0);
+      @media (max-width: 768px) {
+        width: 100%;
+        height: 30vh;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
     }
-    &:nth-child(2) {
-      --angle: 90;
-      --delay: 0.2;
+    .second-img {
+      width: 40vw;
+      height: 28vw;
+      background: url("@/assets/exhibition2.jpg") no-repeat 30% center;
+      background-size: cover;
+      clip-path: polygon(26% 0, 0 21%, 0 100%, 80% 100%, 100% 79%, 100% 0);
+      @media (max-width: 768px) {
+        width: 100%;
+        height: 30vh;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
     }
-    &:nth-child(3) {
-      --angle: 135;
-      --delay: 0.3;
+    .third-img {
+      width: 35vw;
+      height: 23vw;
+      background: url("@/assets/exhibition1.jpg") no-repeat 30% center;
+      background-size: cover;
+      clip-path: polygon(26% 0, 0 21%, 0 100%, 80% 100%, 100% 79%, 100% 0);
+      @media (max-width: 768px) {
+        width: 100%;
+        height: 30vh;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
     }
-
-    &:nth-child(4) {
-      --angle: 180;
-      --delay: 0.4;
-    }
-
-    &:nth-child(5) {
-      --angle: 225;
-      --delay: 0.5;
-    }
-
-    &:nth-child(6) {
-      --angle: 270;
-      --delay: 0.6;
-    }
-
-    &:nth-child(7) {
-      --angle: 315;
-      --delay: 0.7;
-    }
-
-    &:nth-child(8) {
-      --angle: 360;
-      --delay: 0.8;
-    }
-  }
-}
-@keyframes spinner-19rk4d {
-  0%,
-  30%,
-  50%,
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg))
-      translate(0, calc(var(--radius) * 0px)) scale(0);
-  }
-
-  40% {
-    transform: rotate(calc(var(--angle) * 1deg))
-      translate(0, calc(var(--radius) * 1px)) scale(1);
   }
 }
 </style>
