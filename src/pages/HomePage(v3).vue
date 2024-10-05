@@ -9,7 +9,7 @@ export default {
   setup() {
     const bannerImg = ref(require("@/assets/banner.jpg"));
     const iconImg = ref(require("@/assets/icon.png"));
-    const artistImg = ref(require("@/assets/artist.jpg"));
+    const artistImg = ref(require("@/assets/artist2.jpg"));
     const artworkImgs = ref([]);
     const logoColor = ref("");
     // const windowWidth = ref(window.innerWidth);
@@ -32,23 +32,18 @@ export default {
     artworkImgs.value = [...flatImages, ...solidImages].sort(
       () => Math.random() - 0.5
     );
-    // console.log("artworkImgs:", artworkImgs.value);
 
     onMounted(async () => {
       gsap.registerPlugin(ScrollTrigger, Observer);
 
       await nextTick();
 
+      //load element && banner anition
       const imgElement = document.querySelector(".img");
-
-      var tl = gsap.timeline({});
       if (imgElement) {
         imgElement.onload = () => {
           const imgWidth = imgElement.offsetWidth - 1;
-          tl.to(".banner-animation .imgs", {
-            scrollTrigger: {
-              trigger: ".banner-animation .imgs",
-            },
+          gsap.to(".banner-animation .imgs", {
             x: -imgWidth * 2,
             duration: 200,
             ease: "linear",
@@ -59,16 +54,270 @@ export default {
         console.error("imgElement not found");
       }
 
-      // // 更新 windowWidth 當視窗大小改變時
-      // window.addEventListener("resize", () => {
-      //   windowWidth.value = window.innerWidth;
-      // });
+      //banner animation
+      gsap.from(".banner-container .bottom img", {
+        opacity: 0,
+        duration: 5,
+        ease: "power2.out",
+      });
+
+      //first section animation
+      var firstAnimation = gsap.timeline({
+        repeat: -1,
+        repeatDelay: 0,
+        yoyo: true,
+      });
+      firstAnimation.fromTo(
+        ".first",
+        {
+          clipPath: "polygon(0 0, 100% 10%, 100% 95%, 0 100%)",
+        },
+        {
+          clipPath: "polygon(0 3%, 100% 10%, 100% 91%, 0 98%)",
+          duration: 4,
+          ease: "linear",
+        }
+      );
+      firstAnimation.fromTo(
+        ".first",
+        {
+          clipPath: "polygon(0 3%, 100% 10%, 100% 91%, 0 98%)",
+        },
+        {
+          clipPath: "polygon(0 2%, 100% 7%, 100% 94%, 0 98%)",
+          duration: 4,
+          ease: "linear",
+        }
+      );
+
+      //second section animation
+      var secondAnimation = gsap.timeline({
+        repeat: -1,
+        repeatDelay: 0,
+        yoyo: true,
+      });
+      secondAnimation.fromTo(
+        [".first-img", ".first-img"],
+        {
+          backgroundPositionX: "69%",
+        },
+        {
+          backgroundPositionX: "59%",
+          duration: 30,
+          ease: "linear",
+          yoyo: true,
+          repeat: -1,
+        }
+      );
+      secondAnimation.fromTo(
+        [".second-img", ".second-img"],
+        {
+          backgroundPositionX: "5%",
+        },
+        {
+          backgroundPositionX: "30%",
+          duration: 10,
+          ease: "linear",
+          yoyo: true,
+          repeat: -1,
+        },
+        "<"
+      );
+      secondAnimation.fromTo(
+        [".third-img", ".third-img"],
+        {
+          backgroundPositionX: "20%",
+        },
+        {
+          backgroundPositionX: "50%",
+          duration: 15,
+          ease: "linear",
+          yoyo: true,
+          repeat: -1,
+        },
+        "<"
+      );
+      var secondTitleAnimation = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".second .title",
+          start: "top 40%",
+          end: "bottom 40%",
+        },
+      });
+      secondTitleAnimation.from(".second .title .first-title", {
+        x: -100,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+      });
+      secondTitleAnimation.from(
+        ".second .title .second-title",
+        {
+          x: -100,
+          opacity: 0,
+          duration: 1,
+          delay: 0.3,
+          ease: "power2.out",
+        },
+        "<"
+      );
+      var secondImgAnimation = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".second .container",
+          start: "top 40%",
+          end: "bottom 40%",
+        },
+      });
+      secondImgAnimation.from(".second .container .img", {
+        opacity: 0,
+        duration: 1,
+        stagger: 0.5,
+      });
+
+      //third section animation
+      var thirdAnimation = gsap.timeline({
+        repeat: -1,
+        repeatDelay: 0,
+        yoyo: true,
+      });
+      thirdAnimation.fromTo(
+        ".third",
+        {
+          clipPath: "polygon(0 10%, 100% 0, 100% 100%, 0 95%)",
+        },
+        {
+          clipPath: "polygon(0 10%, 100% 3%, 100% 98%, 0 91%)",
+          duration: 4,
+          ease: "linear",
+        }
+      );
+      thirdAnimation.fromTo(
+        ".third",
+        {
+          clipPath: "polygon(0 10%, 100% 3%, 100% 98%, 0 91%)",
+        },
+        {
+          clipPath: "polygon(0 7%, 100% 2%, 100% 98%, 0 94%)",
+          duration: 4,
+          ease: "linear",
+        }
+      );
+      var thirdTextAnimation = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".third .top",
+          start: "top 40%",
+          end: "bottom 40%",
+        },
+      });
+      thirdTextAnimation.from(".third .top .text-content", {
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+      });
+      thirdTextAnimation.from(
+        ".third .bottom .img",
+        {
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out",
+          delay: 0.3,
+        },
+        "<"
+      );
+
+      //fourth section animation
+      var fourthAnimation = gsap.timeline({
+        repeat: -1,
+        repeatDelay: 0,
+        yoyo: true,
+      });
+      fourthAnimation.fromTo(
+        [".fourth .container .imgs", ".fourth .container .imgs"],
+        { yPercent: 0 },
+        { yPercent: -95, duration: 400, ease: "linear", repeat: -1 },
+        "<"
+      );
+      var fourthTitleAnimation = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".fourth .title",
+          start: "top 40%",
+          end: "bottom 40%",
+        },
+      });
+      fourthTitleAnimation.from(".fourth .title .first-title", {
+        x: -100,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+      });
+      fourthTitleAnimation.from(
+        ".fourth .title .second-title",
+        {
+          x: -100,
+          opacity: 0,
+          duration: 1,
+          delay: 0.3,
+          ease: "power2.out",
+        },
+        "<"
+      );
+      fourthTitleAnimation.from(
+        ".fourth .container .imgs",
+        {
+          opacity: 0,
+          duration: 1,
+        },
+        "<"
+      );
+
+      //footer animation
+      var footerAnimation = gsap.timeline({
+        repeat: -1,
+        repeatDelay: 0,
+        yoyo: true,
+      });
+      footerAnimation.fromTo(
+        ["footer", "footer"],
+        { clipPath: "polygon(0 0, 100% 10%, 100% 100%, 0 100%)" },
+        {
+          clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)",
+          duration: 4,
+          ease: "linear",
+        }
+      );
+      footerAnimation.fromTo(
+        ["footer", "footer"],
+        { clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)" },
+        {
+          clipPath: "polygon(0 2%, 100% 15%, 100% 100%, 0 100%)",
+          duration: 4,
+          ease: "linear",
+        }
+      );
+
+      //hide header on scroll down
+      var scrollDown = () => {
+        gsap.to("header", {
+          yPercent: -100,
+          duration: 1.5,
+          ease: "power2.out",
+        });
+      };
+
+      //show header on scroll up
+      var scrollUp = () => {
+        gsap.to("header", {
+          yPercent: 0,
+          duration: 1.5,
+          ease: "power2.out",
+        });
+      };
 
       Observer.create({
         type: "wheel,touch,pointer",
         wheelSpeed: -1,
-        onDown: () => console.log("onDown"),
-        onUp: () => console.log("onUp"),
+        onDown: () => scrollUp(),
+        onUp: () => scrollDown(),
       });
     });
 
@@ -96,10 +345,12 @@ export default {
       <div></div>
     </div>
   </div>
+
   <header>
     <h1>Seaport Handicrafts</h1>
     <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
   </header>
+
   <div class="banner-animation">
     <div class="imgs">
       <img v-for="i in 5" :key="i" :src="bannerImg" class="img" />
@@ -121,23 +372,69 @@ export default {
         </p>
       </div>
     </section>
+
     <section class="second">
+      <div class="title">
+        <h1 class="first-title">Seaport</h1>
+        <h1 class="second-title">Exhibition</h1>
+      </div>
       <div class="container">
-        <div class="img first-img"></div>
-        <div class="img second-img"></div>
-        <div class="img third-img"></div>
+        <div class="top">
+          <div class="img first-img"></div>
+          <div class="img second-img"></div>
+        </div>
+        <div class="bottom">
+          <div class="img third-img"></div>
+        </div>
       </div>
     </section>
-    <section class="third"></section>
+
+    <section class="third">
+      <div class="top">
+        <div class="text-content">
+          <h1>徐碧姿<span>Hsu Pei-Tzu</span></h1>
+          <p>
+            徐老師的編織結藝最與眾不同的是，她將膠彩畫的發光礦物顏料與多色顏料結合於編織作品中，用她敏銳獨到的觀察力，從生活中的花草、蟲、魚、蝶、蔬果等觀察，尋找最貼近生活的題材，在日常的生活中尋找俯拾即是的美感，並運用其巧手編織將所見轉化爲更具美與意的創作，並藉此表達對自然的關懷。<br />
+            (文/柯丁祺)
+          </p>
+        </div>
+      </div>
+      <div class="bottom">
+        <div
+          class="img"
+          :style="{ 'background-image': `url(${artistImg})` }"
+        ></div>
+      </div>
+    </section>
   </main>
+
+  <section class="fourth">
+    <div class="top">
+      <div class="title">
+        <h1 class="first-title">Contemporary</h1>
+        <h1 class="second-title">Knot Art</h1>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="container">
+        <div class="imgs">
+          <img v-for="img in artworkImgs" :key="img" :src="img" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="text-content">
+      <p>
+        Copyright © 2024 Hsu Pei-Tzu. Designed and maintained by Kamaboko Wu.
+        All rights reserved.
+      </p>
+    </div>
+  </footer>
 </template>
 
 <style scoped lang="scss">
-* {
-  box-sizing: border-box;
-  user-select: none;
-}
-
 .loader {
   position: fixed;
   z-index: 99999;
@@ -166,6 +463,21 @@ export default {
     transform: rotate(calc(var(--angle) * 1deg))
       translate(0, calc(var(--radius) * 0px));
     animation: spinner-19rk4d 1.5s calc(var(--delay) * 1.2s) infinite ease;
+
+    @keyframes spinner-19rk4d {
+      0%,
+      30%,
+      50%,
+      100% {
+        transform: rotate(calc(var(--angle) * 1deg))
+          translate(0, calc(var(--radius) * 0px)) scale(0);
+      }
+
+      40% {
+        transform: rotate(calc(var(--angle) * 1deg))
+          translate(0, calc(var(--radius) * 1px)) scale(1);
+      }
+    }
     &:nth-child(1) {
       --angle: 45;
       --delay: 0.1;
@@ -203,20 +515,6 @@ export default {
       --angle: 360;
       --delay: 0.8;
     }
-  }
-}
-@keyframes spinner-19rk4d {
-  0%,
-  30%,
-  50%,
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg))
-      translate(0, calc(var(--radius) * 0px)) scale(0);
-  }
-
-  40% {
-    transform: rotate(calc(var(--angle) * 1deg))
-      translate(0, calc(var(--radius) * 1px)) scale(1);
   }
 }
 
@@ -297,64 +595,296 @@ header {
   }
 }
 
-main {
-  height: 1000vh;
-}
-
 .first {
-  background: #ffffff95;
-  clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
-  padding: 10vh 5vw 5vh 5vw;
-
+  background: #fff;
+  padding: 10vh 5vw 10vh 5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .text-content {
+    max-width: 1200px;
+    color: #545458;
+    font-weight: bold;
+  }
   @media (max-width: 768px) {
-    clip-path: polygon(0 3%, 100% 0, 100% 100%, 0 100%);
-    padding: 6vh 8vw 5vh 8vw;
+    padding: 8vh 8vw 8vh 8vw;
   }
 }
 
 .second {
+  .title {
+    padding: 10vh 10% 5vh 10%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    @media (max-width: 768px) {
+      padding: 10vh 4% 5vh 4%;
+    }
+    h1 {
+      color: #f8bc6e;
+      font-size: 8vw;
+      &:last-child {
+        color: #232323;
+      }
+    }
+  }
+
   .container {
+    padding: 5vh 8vw 10vh 13vw;
+    @media (max-width: 1024px) {
+      padding: 5vh 8vw 10vh 13vw;
+    }
+    @media (max-width: 768px) {
+      padding: 0 0 10vh 0;
+    }
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    .first-img {
-      width: 25vw;
+    .top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10vw 0 2vw 0;
+      @media (max-width: 1024px) {
+        padding: 5vw 0 10vw 0;
+      }
+      @media (max-width: 768px) {
+        padding: 0;
+        flex-direction: column;
+      }
+      .first-img {
+        width: 28vw;
+        height: 50vw;
+        background-image: url("@/assets/exhibition6.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        transform: translateY(20vw);
+        @media (max-width: 1024px) {
+          width: 60vw;
+          height: 55vw;
+          transform: translateY(38vw);
+        }
+      }
+      .second-img {
+        width: 42vw;
+        height: 28vw;
+        background-image: url("@/assets/exhibition5.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        @media (max-width: 1024px) {
+          width: 55vw;
+          height: 35vw;
+          transform: translateX(-34vw);
+        }
+      }
+    }
+    .bottom {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0vw 2vw 8vh 0;
+      @media (max-width: 1024px) {
+        padding: 31vw 2vw 8vh 0;
+        flex-shrink: 0;
+      }
+      @media (max-width: 768px) {
+        padding: 0;
+        flex-direction: column;
+      }
+      .third-img {
+        width: 28vw;
+        height: 27vw;
+        background-image: url("@/assets/exhibition4.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        transform: translateX(-5vw);
+        @media (max-width: 1024px) {
+          width: 45vw;
+          height: 40vw;
+          transform: translateX(-5vw);
+        }
+      }
+    }
+    .img {
+      --img-clip-path: 50px;
+      clip-path: polygon(
+        var(--img-clip-path) 0,
+        0 var(--img-clip-path),
+        0 100%,
+        calc(100% - var(--img-clip-path)) 100%,
+        100% calc(100% - var(--img-clip-path)),
+        100% 0
+      );
+      @media (max-width: 1024px) {
+        --img-clip-path: 35px;
+        flex-shrink: 0;
+      }
+      @media (max-width: 768px) {
+        margin-top: 2vh;
+        width: 100% !important;
+        height: 40vh !important;
+        transform: translateY(0) !important;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
+    }
+  }
+}
+
+.third {
+  background: #fff;
+  padding: 17vh 2vw 17vh 2vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #545458;
+  font-weight: bold;
+  .top {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    @media (max-width: 768px) {
+      align-items: center;
+      justify-content: center;
+    }
+    .text-content {
+      width: 43%;
+      @media (max-width: 1024px) {
+        width: 60%;
+      }
+      @media (max-width: 768px) {
+        width: 80%;
+      }
+      @media (min-width: 1024px) {
+        p {
+          max-width: 500px;
+        }
+      }
+      h1 {
+        color: #232323;
+        span {
+          margin-left: 10px;
+          font-size: var(--main-font-size);
+        }
+      }
+    }
+  }
+  .bottom {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8vh;
+    @media (max-width: 1024px) {
+      margin-top: 4vh;
+    }
+    .img {
+      width: 100%;
       height: 40vw;
-      background: url("@/assets/exhibition3.jpg") no-repeat 30% center;
       background-size: cover;
-      clip-path: polygon(26% 0, 0 21%, 0 100%, 80% 100%, 100% 79%, 100% 0);
+      background-position: center;
+      background-repeat: no-repeat;
+      --img-clip-path: 60px;
+      clip-path: polygon(
+        var(--img-clip-path) 0,
+        0 var(--img-clip-path),
+        0 100%,
+        calc(100% - var(--img-clip-path)) 100%,
+        100% calc(100% - var(--img-clip-path)),
+        100% 0
+      );
+      @media (min-width: 1024px) {
+        max-width: 1300px;
+        max-height: 650px;
+      }
+      @media (max-width: 1024px) {
+        --img-clip-path: 45px;
+        height: 55vw;
+      }
       @media (max-width: 768px) {
-        width: 100%;
-        height: 30vh;
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        --img-clip-path: 30px;
+        height: 70vh;
       }
     }
-    .second-img {
-      width: 40vw;
-      height: 28vw;
-      background: url("@/assets/exhibition2.jpg") no-repeat 30% center;
-      background-size: cover;
-      clip-path: polygon(26% 0, 0 21%, 0 100%, 80% 100%, 100% 79%, 100% 0);
+  }
+}
+
+.fourth {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 18vh 0;
+  @media (max-width: 1024px) {
+    padding: 12vh 0;
+  }
+  @media (max-width: 768px) {
+    padding: 8vh 0;
+  }
+  .top {
+    width: 100%;
+    .title {
+      padding: 0 10% 5vh 10%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      flex-direction: column;
       @media (max-width: 768px) {
-        width: 100%;
-        height: 30vh;
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        padding: 0 4% 3vh 4%;
+      }
+      h1 {
+        color: #f8bc6e;
+        font-size: 8vw;
+        &:last-child {
+          color: #232323;
+        }
       }
     }
-    .third-img {
-      width: 35vw;
-      height: 23vw;
-      background: url("@/assets/exhibition1.jpg") no-repeat 30% center;
-      background-size: cover;
-      clip-path: polygon(26% 0, 0 21%, 0 100%, 80% 100%, 100% 79%, 100% 0);
+  }
+  .bottom {
+    height: 75vh;
+    width: 90%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    .imgs {
+      column-count: 6;
+      column-gap: 1vw;
+      width: 100%;
+      margin: 1rem auto;
+      @media (max-width: 1024px) {
+        column-count: 4;
+      }
       @media (max-width: 768px) {
+        column-count: 2;
+      }
+
+      img {
         width: 100%;
-        height: 30vh;
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+        padding: 0.5vw 0;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+        transition-delay: 0.3s;
       }
     }
+  }
+}
+
+footer {
+  width: 100%;
+  padding: 10vh 10% 3vh 10%;
+  display: flex;
+  background: #fff;
+  @media (max-width: 768px) {
+    font-size: 1rem;
   }
 }
 </style>

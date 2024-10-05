@@ -230,6 +230,7 @@ export default {
       </h6>
     </div>
   </header>
+
   <section class="first">
     <div class="outer">
       <div class="inner">
@@ -251,6 +252,7 @@ export default {
       </div>
     </div>
   </section>
+
   <section class="second-for-phone">
     <div class="outer">
       <div class="inner">
@@ -266,6 +268,7 @@ export default {
       </div>
     </div>
   </section>
+
   <section class="second">
     <div class="outer">
       <div class="inner">
@@ -295,6 +298,7 @@ export default {
       </div>
     </div>
   </section>
+
   <section class="third">
     <div class="outer">
       <div class="inner">
@@ -310,6 +314,7 @@ export default {
       </div>
     </div>
   </section>
+
   <section class="fourth">
     <div class="outer">
       <div class="inner">
@@ -350,10 +355,6 @@ $bg-gradient: linear-gradient(
   rgba(0, 0, 0, 0.3) 100%
 );
 
-* {
-  box-sizing: border-box;
-  user-select: none;
-}
 
 a {
   color: #fff;
