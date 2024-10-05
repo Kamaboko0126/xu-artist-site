@@ -12,7 +12,7 @@ export default {
     const artistImg = ref(require("@/assets/artist2.jpg"));
     const artworkImgs = ref([]);
     const logoColor = ref("");
-    // const windowWidth = ref(window.innerWidth);
+    const windowWidth = ref(window.innerWidth);
 
     // 動態引入 assets/flat 和 assets/solid 目錄中的所有圖片
     const flatImages = require
@@ -161,14 +161,7 @@ export default {
         },
         "<"
       );
-      var secondImgAnimation = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".second .container",
-          start: "top 40%",
-          end: "bottom 40%",
-        },
-      });
-      secondImgAnimation.from(".second .container .img", {
+      secondTitleAnimation.from(".second .container .img", {
         opacity: 0,
         duration: 1,
         stagger: 0.5,
@@ -313,11 +306,19 @@ export default {
         });
       };
 
+      // 更新 windowWidth 當視窗大小改變時
+      window.addEventListener("resize", () => {
+        windowWidth.value = window.innerWidth;
+        if (windowWidth.value < 768) {
+          scrollUp();
+        }
+      });
+
       Observer.create({
         type: "wheel,touch,pointer",
         wheelSpeed: -1,
-        onDown: () => scrollUp(),
-        onUp: () => scrollDown(),
+        onDown: () => windowWidth.value > 768 && scrollUp(),
+        onUp: () => windowWidth.value > 768 && scrollDown(),
       });
     });
 
@@ -347,8 +348,13 @@ export default {
   </div>
 
   <header>
-    <h1>Seaport Handicrafts</h1>
-    <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
+    <div class="logo">
+      <h1>Seaport Handicrafts</h1>
+      <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
+    </div>
+    <div class="navbar">
+      <i class="material-icons">menu</i>
+    </div>
   </header>
 
   <div class="banner-animation">
@@ -522,26 +528,33 @@ header {
   height: 150px;
   width: 100%;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
   position: fixed;
   z-index: 999;
   top: 0;
   left: 0;
-  flex-direction: column;
   // background: #232323;
   padding: 0 3vw;
-  h1 {
-    text-transform: uppercase;
-    font-family: "Playfair Display";
-    line-height: normal;
-    font-weight: 500;
-    color: #f8bc6e;
+  .logo {
+    h1 {
+      text-transform: uppercase;
+      font-family: "Playfair Display";
+      line-height: normal;
+      font-weight: 500;
+      color: #f8bc6e;
+    }
+    h6 {
+      font-family: "Qwigley";
+      font-weight: 400;
+      color: #fff;
+    }
   }
-  h6 {
-    font-family: "Qwigley";
-    font-weight: 400;
-    color: #fff;
+  .navbar {
+    i {
+      font-weight: bold;
+      font-size: 40px;
+    }
   }
 }
 
@@ -882,6 +895,8 @@ footer {
   width: 100%;
   padding: 10vh 10% 3vh 10%;
   display: flex;
+  justify-content: center;
+  align-items: center;
   background: #fff;
   @media (max-width: 768px) {
     font-size: 1rem;
