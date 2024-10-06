@@ -1,10 +1,176 @@
 <script>
+import { onMounted, provide, ref } from "vue";
+import { gsap } from "gsap";
+import { Observer } from "gsap/Observer";
+import { useRoute, useRouter } from "vue-router";
+
 export default {
   name: "App",
+  setup() {
+    const artworkImgs = ref();
+    provide("artworkImgs", artworkImgs);
+    const windowWidth = ref(window.innerWidth);
+    const isHomepage = ref(false);
+
+    // 動態引入 assets/artworks/normalized 目錄中的所有圖片
+    const flatImages = require
+      .context("@/assets/artworks/normalized/", false, /\.(jpe?g)$/)
+      .keys()
+      .map((key) => {
+        const fileName = key.replace("./", "");
+        return {
+          url: require(`@/assets/artworks/normalized/${fileName}`),
+          id: fileName,
+        };
+      });
+
+    // 打亂圖片
+    artworkImgs.value = [...flatImages].sort(() => Math.random() - 0.5);
+
+    // 創建一個函數來加載圖片並返回一個 Promise
+    const loadImage = (src) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+    };
+
+    // 等待所有圖片載入完成
+    const loadAllImages = async () => {
+      const imageSources = [...artworkImgs.value.map((img) => img.url)];
+      try {
+        await Promise.all(imageSources.map((src) => loadImage(src)));
+        console.log("All images loaded successfully from App.vue");
+      } catch (error) {
+        console.error("Error loading images:", error);
+      }
+    };
+
+    onMounted(async () => {
+      gsap.registerPlugin(Observer);
+
+      try {
+        await loadAllImages();
+        console.log("All images loaded from App.vue");
+
+        // 更新 windowWidth 當視窗大小改變時
+        window.addEventListener("resize", () => {
+          windowWidth.value = window.innerWidth;
+          if (windowWidth.value < 768) {
+            gsap.to("header", {
+              yPercent: 0,
+              duration: 1.5,
+              ease: "power2.out",
+            });
+          }
+        });
+
+        //hide header on scroll down
+        var scrollDown = () => {
+          if (windowWidth.value > 768) {
+            gsap.to("header", {
+              yPercent: -100,
+              duration: 1.5,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.to(".logo", {
+              scrollTrigger: {
+                trigger: ".first",
+                start: "top 20",
+                end: "top 0",
+                scrub: true,
+              },
+              opacity: 0,
+              duration: 1,
+              ease: "power2.out",
+            });
+          }
+        };
+
+        //show header on scroll up
+        var scrollUp = () => {
+          if (windowWidth.value > 768) {
+            gsap.to("header", {
+              yPercent: 0,
+              duration: 1.5,
+              ease: "power2.out",
+            });
+          }
+        };
+
+        Observer.create({
+          type: "wheel,touch,pointer",
+          wheelSpeed: -1,
+          onDown: () => isHomepage.value && scrollUp(),
+          onUp: () => isHomepage.value && scrollDown(),
+        });
+      } catch (error) {
+        console.error("Error loading images:", error);
+      }
+    });
+
+    const router = useRouter();
+    const route = useRoute();
+
+    // 檢查是否在首頁
+    const checkIfHomepage = (path) => {
+      isHomepage.value = path === "/";
+      if (!isHomepage.value) {
+        gsap.to("header", {
+          yPercent: 0,
+          duration: 1.5,
+          ease: "power2.out",
+        });
+      }
+    };
+
+    // 初次載入時檢查
+    checkIfHomepage(route.path);
+
+    // 監聽路由變化
+    router.afterEach((to, from) => {
+      console.log(`Route changed from ${from.path} to ${to.path}`);
+      checkIfHomepage(to.path);
+    });
+
+    console.log("Current route path:", route.path);
+
+    return {
+      isHomepage,
+    };
+  },
 };
 </script>
 
 <template>
+  <div class="loader">
+    <div class="spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+  <header>
+    <div class="logo">
+      <h1>Seaport Handicrafts</h1>
+      <h6 :style="{ color: isHomepage ? '#fff' : '#232323' }">
+        - Contemporary Knot Art of Hsu Pei-Tzu -
+      </h6>
+    </div>
+    <div class="navbar">
+      <!-- <i class="material-icons">menu</i> -->
+    </div>
+  </header>
+
   <router-view></router-view>
 </template>
 
@@ -14,19 +180,20 @@ export default {
   --h1-size: 30px;
   --h6-size: 30px;
   --line-height: 2;
+  --header-height: 150px;
 
   @media (max-width: 1024px) {
-  --main-font-size: 17px;
-  --h1-size: 25px;
-  --h6-size: 25px;
-  --line-height: 1.85;
+    --main-font-size: 17px;
+    --h1-size: 25px;
+    --h6-size: 25px;
+    --line-height: 1.85;
   }
 
   @media (max-width: 768px) {
-  --main-font-size: 14px;
-  --h1-size: 20px;
-  --h6-size: 20px;
-  --line-height: 1.7;
+    --main-font-size: 14px;
+    --h1-size: 20px;
+    --h6-size: 20px;
+    --line-height: 1.7;
   }
 }
 
@@ -36,6 +203,11 @@ export default {
   box-sizing: border-box;
   font-family: "source-han-sans-traditional", sans-serif;
   font-style: normal;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .text-content p {
@@ -57,5 +229,137 @@ h1 {
 
 h6 {
   font-size: var(--h6-size);
+}
+
+.loader {
+  position: fixed;
+  z-index: 99999;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  .spinner {
+    --radius: 90;
+    --size: 35;
+    @media (max-width: 1024px) {
+      --radius: 70;
+      --size: 30;
+    }
+    @media (max-width: 768px) {
+      --radius: 50;
+      --size: 20;
+    }
+    position: relative;
+    width: calc(var(--size) * 1px);
+    height: calc(var(--size) * 1px);
+    div {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #232323;
+      border-radius: 50%;
+      transform: rotate(calc(var(--angle) * 1deg))
+        translate(0, calc(var(--radius) * 0px));
+      animation: spinner-19rk4d 2s calc(var(--delay) * 1.2s) infinite ease;
+
+      @keyframes spinner-19rk4d {
+        0%,
+        30%,
+        50%,
+        100% {
+          transform: rotate(calc(var(--angle) * 1deg))
+            translate(0, calc(var(--radius) * 0px)) scale(0);
+        }
+
+        40% {
+          transform: rotate(calc(var(--angle) * 1deg))
+            translate(0, calc(var(--radius) * 1px)) scale(1);
+        }
+      }
+      &:nth-child(1) {
+        --angle: 45;
+        --delay: 0.1;
+      }
+      &:nth-child(2) {
+        --angle: 90;
+        --delay: 0.2;
+      }
+      &:nth-child(3) {
+        --angle: 135;
+        --delay: 0.3;
+      }
+
+      &:nth-child(4) {
+        --angle: 180;
+        --delay: 0.4;
+      }
+
+      &:nth-child(5) {
+        --angle: 225;
+        --delay: 0.5;
+      }
+
+      &:nth-child(6) {
+        --angle: 270;
+        --delay: 0.6;
+      }
+
+      &:nth-child(7) {
+        --angle: 315;
+        --delay: 0.7;
+      }
+
+      &:nth-child(8) {
+        --angle: 360;
+        --delay: 0.8;
+      }
+    }
+  }
+}
+
+header {
+  height: var(--header-height);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  // background: #232323;
+  padding: 0 3vw;
+  .logo {
+    h1 {
+      text-transform: uppercase;
+      font-family: "Playfair Display";
+      line-height: normal;
+      font-weight: 500;
+      color: #f8bc6e;
+    }
+    h6 {
+      font-family: "Qwigley";
+      font-weight: 400;
+      color: #fff;
+    }
+  }
+  .navbar {
+    i {
+      font-weight: bold;
+      font-size: 40px;
+      color: #232323;
+      cursor: pointer;
+      @media (max-width: 1024px) {
+        font-size: 35px;
+      }
+      @media (max-width: 768px) {
+        font-size: 30px;
+      }
+    }
+  }
 }
 </style>

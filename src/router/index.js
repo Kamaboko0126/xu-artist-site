@@ -6,6 +6,11 @@ const routes = [
     name: "home",
     component: () => import("@/pages/HomePage(v3).vue"),
   },
+  {
+    path: "/artwork",
+    name: "artwork",
+    component: () => import("@/pages/ArtworkPage.vue"),
+  },
 ];
 
 const router = createRouter({

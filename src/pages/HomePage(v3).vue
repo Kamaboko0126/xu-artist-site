@@ -1,41 +1,26 @@
 <script>
-import { ref, onMounted, nextTick } from "vue";
+import { ref, onMounted, nextTick, inject } from "vue";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Observer } from "gsap/Observer";
 
 /* eslint-disable no-irregular-whitespace */
 export default {
   setup() {
     const bannerImg = ref(require("@/assets/banner.jpg"));
-    const iconImg = ref(require("@/assets/icon.png"));
+    const iconImg = ref(require("@/assets/icons/icon.png"));
     const artistImg = ref(require("@/assets/artist2.jpg"));
-    const eihibitionImg1 = ref(require("@/assets/exhibition6.jpg"));
-    const eihibitionImg2 = ref(require("@/assets/exhibition5.jpg"));
-    const eihibitionImg3 = ref(require("@/assets/exhibition4.jpg"));
-    const artworkImgs = ref([]);
+    const eihibitionImg1 = ref(
+      require("@/assets/exhibition-images/exhibition6.jpg")
+    );
+    const eihibitionImg2 = ref(
+      require("@/assets/exhibition-images/exhibition5.jpg")
+    );
+    const eihibitionImg3 = ref(
+      require("@/assets/exhibition-images/exhibition4.jpg")
+    );
+    const artworkImgs = inject("artworkImgs");
     const logoColor = ref("");
     const windowWidth = ref(window.innerWidth);
-    const loading = ref(true);
-
-    // 動態引入 assets/flat 和 assets/solid 目錄中的所有圖片
-    const flatImages = require
-      .context("@/assets/flat/normalized/", false, /\.(png|jpe?g|svg)$/)
-      .keys()
-      .map((key) =>
-        require(`@/assets/flat/normalized/${key.replace("./", "")}`)
-      );
-    const solidImages = require
-      .context("@/assets/solid/normalized/", false, /\.(png|jpe?g|svg)$/)
-      .keys()
-      .map((key) =>
-        require(`@/assets/solid/normalized/${key.replace("./", "")}`)
-      );
-
-    // 合併並打亂圖片
-    artworkImgs.value = [...flatImages, ...solidImages].sort(
-      () => Math.random() - 0.5
-    );
 
     // 創建一個函數來加載圖片並返回一個 Promise
     const loadImage = (src) => {
@@ -56,21 +41,32 @@ export default {
         eihibitionImg1.value,
         eihibitionImg2.value,
         eihibitionImg3.value,
-        ...artworkImgs.value,
       ];
-      await Promise.all(imageSources.map((src) => loadImage(src)));
+      try {
+        await Promise.all(imageSources.map((src) => loadImage(src)));
+        console.log("All images loaded successfully from HomePage.vue");
+      } catch (error) {
+        console.error("Error loading images:", error);
+      }
     };
 
     onMounted(async () => {
-      gsap.registerPlugin(ScrollTrigger, Observer);
+      gsap.registerPlugin(ScrollTrigger);
 
       await nextTick();
+
+      // show loader
+      gsap.to(".loader", {
+        display: "flex",
+        autoAlpha: 1,
+        duration: 0.2,
+        ease: "power2.out",
+      });
 
       try {
         await loadAllImages();
 
-        console.log("All images loaded");
-        loading.value = false;
+        console.log("All images loaded from HomePage.vue");
 
         // hide loader
         gsap.to(".loader", {
@@ -272,9 +268,9 @@ export default {
           yoyo: true,
         });
         fourthAnimation.fromTo(
-          [".fourth .container .imgs", ".fourth .container .imgs"],
+          [".fourth .imgs", ".fourth .imgs"],
           { yPercent: 0 },
-          { yPercent: -95, duration: 400, ease: "linear", repeat: -1 },
+          { yPercent: -80, duration: 160, ease: "linear", repeat: -1 },
           "<"
         );
         var fourthTitleAnimation = gsap.timeline({
@@ -302,13 +298,18 @@ export default {
           "<"
         );
         fourthTitleAnimation.from(
-          ".fourth .container .imgs",
+          ".fourth .imgs",
           {
             opacity: 0,
             duration: 1,
+            delay: 0.4,
           },
           "<"
         );
+        fourthTitleAnimation.from(".fourth .btn", {
+          opacity: 0,
+          duration: 1,
+        });
 
         //footer animation
         var footerAnimation = gsap.timeline({
@@ -335,64 +336,9 @@ export default {
           }
         );
 
-        //hide header on scroll down
-        var scrollDown = () => {
-          if (windowWidth.value > 768) {
-            gsap.to("header", {
-              yPercent: -100,
-              duration: 1.5,
-              ease: "power2.out",
-            });
-          } else {
-            gsap.to(".logo", {
-              scrollTrigger: {
-                trigger: ".first",
-                start: "top 20",
-                end: "top 0",
-                scrub: true,
-              },
-              opacity: 0,
-              duration: 1,
-              ease: "power2.out",
-            });
-          }
-        };
-
-        //show header on scroll up
-        var scrollUp = () => {
-          if (windowWidth.value > 768) {
-            gsap.to("header", {
-              yPercent: 0,
-              duration: 1.5,
-              ease: "power2.out",
-            });
-            // } else {
-            //   gsap.to("header .logo", {
-            //     scrollTrigger: {
-            //       trigger: ".first",
-            //       start: "bottom top",
-            //       end: "top top",
-            //     },
-            //     opacity: 1,
-            //     duration: 1,
-            //     ease: "power2.out",
-            //   });
-          }
-        };
-
         // 更新 windowWidth 當視窗大小改變時
         window.addEventListener("resize", () => {
           windowWidth.value = window.innerWidth;
-          if (windowWidth.value < 768) {
-            scrollUp();
-          }
-        });
-
-        Observer.create({
-          type: "wheel,touch,pointer",
-          wheelSpeed: -1,
-          onDown: () => scrollUp(),
-          onUp: () => scrollDown(),
         });
       } catch (error) {
         console.error(error);
@@ -414,29 +360,6 @@ export default {
 </script>
 
 <template>
-  <div class="loader">
-    <div class="spinner">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-  </div>
-
-  <header>
-    <div class="logo">
-      <h1>Seaport Handicrafts</h1>
-      <h6>- Contemporary Knot Art of Hsu Pei-Tzu -</h6>
-    </div>
-    <div class="navbar">
-      <i class="material-icons">menu</i>
-    </div>
-  </header>
-
   <div class="banner-animation">
     <div class="imgs">
       <img v-for="i in 5" :key="i" :src="bannerImg" class="img" />
@@ -511,11 +434,19 @@ export default {
       </div>
     </div>
     <div class="bottom">
-      <div class="container">
-        <div class="imgs">
-          <img v-for="img in artworkImgs" :key="img" :src="img" />
+      <div class="imgs">
+        <div class="img-container" v-for="img in artworkImgs" :key="img">
+          <router-link :to="`/artwork?id=${img.id}`">
+            <img :src="img.url" />
+          </router-link>
         </div>
       </div>
+    </div>
+    <div class="btn">
+      <router-link to="/artwork">
+        <h1>View All</h1>
+        <i class="material-icons">open_in_new</i>
+      </router-link>
     </div>
   </section>
 
@@ -530,97 +461,6 @@ export default {
 </template>
 
 <style scoped lang="scss">
-.loader {
-  position: fixed;
-  z-index: 99999;
-  height: 100vh;
-  width: 100%;
-  top: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  // display: none;
-  .spinner {
-    --radius: 90;
-    --size: 35;
-    @media (max-width: 1024px) {
-      --radius: 70;
-      --size: 30;
-    }
-    @media (max-width: 768px) {
-      --radius: 50;
-      --size: 20;
-    }
-    position: relative;
-    width: calc(var(--size) * 1px);
-    height: calc(var(--size) * 1px);
-    div {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: #232323;
-      border-radius: 50%;
-      transform: rotate(calc(var(--angle) * 1deg))
-        translate(0, calc(var(--radius) * 0px));
-      animation: spinner-19rk4d 2s calc(var(--delay) * 1.2s) infinite ease;
-
-      @keyframes spinner-19rk4d {
-        0%,
-        30%,
-        50%,
-        100% {
-          transform: rotate(calc(var(--angle) * 1deg))
-            translate(0, calc(var(--radius) * 0px)) scale(0);
-        }
-
-        40% {
-          transform: rotate(calc(var(--angle) * 1deg))
-            translate(0, calc(var(--radius) * 1px)) scale(1);
-        }
-      }
-      &:nth-child(1) {
-        --angle: 45;
-        --delay: 0.1;
-      }
-      &:nth-child(2) {
-        --angle: 90;
-        --delay: 0.2;
-      }
-      &:nth-child(3) {
-        --angle: 135;
-        --delay: 0.3;
-      }
-
-      &:nth-child(4) {
-        --angle: 180;
-        --delay: 0.4;
-      }
-
-      &:nth-child(5) {
-        --angle: 225;
-        --delay: 0.5;
-      }
-
-      &:nth-child(6) {
-        --angle: 270;
-        --delay: 0.6;
-      }
-
-      &:nth-child(7) {
-        --angle: 315;
-        --delay: 0.7;
-      }
-
-      &:nth-child(8) {
-        --angle: 360;
-        --delay: 0.8;
-      }
-    }
-  }
-}
-
 header {
   height: 150px;
   width: 100%;
@@ -972,9 +812,10 @@ header {
     width: 90%;
     max-width: 1200px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     overflow: hidden;
+    flex-direction: column;
     .imgs {
       column-count: 6;
       column-gap: 1vw;
@@ -986,13 +827,49 @@ header {
       @media (max-width: 768px) {
         column-count: 2;
       }
+      .img-container {
+        overflow: hidden; /* 確保超出的部分被隱藏 */
+      }
 
       img {
         width: 100%;
         padding: 0.5vw 0;
         cursor: pointer;
-        transition: 0.3s ease-in-out;
-        transition-delay: 0.3s;
+        transition: 0.4s ease-in-out;
+        transform-origin: center center; /* 設定放大時的中心點 */
+        &:hover {
+          transform: scale(1.07);
+        }
+      }
+    }
+  }
+
+  .btn {
+    margin-top: 8vh;
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      --btn-size: 50px;
+      --img-clip-path: 20px;
+      padding: 2vh 5vw;
+      color: #545458;
+      background: #f8bc6e;
+      font-size: var(--btn-size);
+      clip-path: polygon(
+        var(--img-clip-path) 0,
+        0 var(--img-clip-path),
+        0 100%,
+        calc(100% - var(--img-clip-path)) 100%,
+        100% calc(100% - var(--img-clip-path)),
+        100% 0
+      );
+      cursor: pointer;
+      i,
+      h1 {
+        font-weight: bold;
+        // margin-left: 15px;
+        font-size: var(--btn-size);
       }
     }
   }
