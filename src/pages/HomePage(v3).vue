@@ -10,9 +10,13 @@ export default {
     const bannerImg = ref(require("@/assets/banner.jpg"));
     const iconImg = ref(require("@/assets/icon.png"));
     const artistImg = ref(require("@/assets/artist2.jpg"));
+    const eihibitionImg1 = ref(require("@/assets/exhibition6.jpg"));
+    const eihibitionImg2 = ref(require("@/assets/exhibition5.jpg"));
+    const eihibitionImg3 = ref(require("@/assets/exhibition4.jpg"));
     const artworkImgs = ref([]);
     const logoColor = ref("");
     const windowWidth = ref(window.innerWidth);
+    const loading = ref(true);
 
     // 動態引入 assets/flat 和 assets/solid 目錄中的所有圖片
     const flatImages = require
@@ -33,293 +37,366 @@ export default {
       () => Math.random() - 0.5
     );
 
+    // 創建一個函數來加載圖片並返回一個 Promise
+    const loadImage = (src) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+    };
+
+    // 等待所有圖片載入完成
+    const loadAllImages = async () => {
+      const imageSources = [
+        bannerImg.value,
+        iconImg.value,
+        artistImg.value,
+        eihibitionImg1.value,
+        eihibitionImg2.value,
+        eihibitionImg3.value,
+        ...artworkImgs.value,
+      ];
+      await Promise.all(imageSources.map((src) => loadImage(src)));
+    };
+
     onMounted(async () => {
       gsap.registerPlugin(ScrollTrigger, Observer);
 
       await nextTick();
 
-      //load element && banner anition
-      const imgElement = document.querySelector(".img");
-      if (imgElement) {
-        imgElement.onload = () => {
-          const imgWidth = imgElement.offsetWidth - 1;
-          gsap.to(".banner-animation .imgs", {
-            x: -imgWidth * 2,
-            duration: 200,
+      try {
+        await loadAllImages();
+
+        console.log("All images loaded");
+        loading.value = false;
+
+        // hide loader
+        gsap.to(".loader", {
+          autoAlpha: 0,
+          duration: 1,
+          ease: "power2.out",
+          onComplete: () => {
+            gsap.set(".loader", { display: "none" });
+          },
+        });
+
+        //load element && banner anition
+        const imgElement = document.querySelector(".img");
+        if (imgElement) {
+          imgElement.onload = () => {};
+        } else {
+          console.error("imgElement not found");
+        }
+        const imgWidth = imgElement.offsetWidth - 1;
+        gsap.to(".banner-animation .imgs", {
+          x: -imgWidth * 2,
+          duration: 200,
+          ease: "linear",
+          repeat: -1,
+        });
+
+        //banner animation
+        gsap.from(".banner-container .bottom img", {
+          opacity: 0,
+          duration: 5,
+          ease: "power2.out",
+        });
+
+        //first section animation
+        var firstAnimation = gsap.timeline({
+          repeat: -1,
+          repeatDelay: 0.5,
+          yoyo: true,
+        });
+        firstAnimation.fromTo(
+          ".first",
+          {
+            clipPath: "polygon(0 0, 100% 8%, 100% 99%, 0 100%)",
+          },
+          {
+            clipPath: "polygon(0 4%, 100% 12%, 100% 92%, 0 95%)",
+            duration: 5,
             ease: "linear",
+          }
+        );
+        firstAnimation.fromTo(
+          ".first",
+          {
+            clipPath: "polygon(0 4%, 100% 12%, 100% 92%, 0 95%)",
+          },
+          {
+            delay: 0.5,
+            clipPath: "polygon(0 2%, 100% 7%, 100% 98%, 0 98%)",
+            duration: 5,
+            ease: "linear",
+          }
+        );
+
+        //second section animation
+        var secondAnimation = gsap.timeline({
+          repeat: -1,
+          repeatDelay: 0,
+          yoyo: true,
+        });
+        secondAnimation.fromTo(
+          [".first-img", ".first-img"],
+          {
+            backgroundPositionX: "69%",
+          },
+          {
+            backgroundPositionX: "59%",
+            duration: 30,
+            ease: "linear",
+            yoyo: true,
             repeat: -1,
-          });
+          }
+        );
+        secondAnimation.fromTo(
+          [".second-img", ".second-img"],
+          {
+            backgroundPositionX: "5%",
+          },
+          {
+            backgroundPositionX: "30%",
+            duration: 10,
+            ease: "linear",
+            yoyo: true,
+            repeat: -1,
+          },
+          "<"
+        );
+        secondAnimation.fromTo(
+          [".third-img", ".third-img"],
+          {
+            backgroundPositionX: "20%",
+          },
+          {
+            backgroundPositionX: "50%",
+            duration: 15,
+            ease: "linear",
+            yoyo: true,
+            repeat: -1,
+          },
+          "<"
+        );
+        var secondTitleAnimation = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".second .title",
+            start: "top 40%",
+            end: "bottom 40%",
+          },
+        });
+        secondTitleAnimation.from(".second .title .first-title", {
+          x: -100,
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out",
+        });
+        secondTitleAnimation.from(
+          ".second .title .second-title",
+          {
+            x: -100,
+            opacity: 0,
+            duration: 1,
+            delay: 0.3,
+            ease: "power2.out",
+          },
+          "<"
+        );
+        secondTitleAnimation.from(".second .container .img", {
+          opacity: 0,
+          duration: 1,
+          stagger: 0.5,
+        });
+
+        //third section animation
+        var thirdTextAnimation = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".third",
+            start: "top 40%",
+            end: "bottom 40%",
+          },
+        });
+        thirdTextAnimation.from(".third .top .text-content", {
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out",
+        });
+        thirdTextAnimation.from(
+          ".third .bottom .img",
+          {
+            opacity: 0,
+            duration: 1,
+            ease: "power2.out",
+            delay: 0.3,
+          },
+          "<"
+        );
+        var thirdAnimation = gsap.timeline({
+          repeat: -1,
+          repeatDelay: 0.5,
+          yoyo: true,
+        });
+        thirdAnimation.fromTo(
+          ".third",
+          {
+            clipPath: "polygon(0 8%, 100% 0, 100% 100%, 0 95%)",
+          },
+          {
+            clipPath: "polygon(0 12%, 100% 3%, 100% 98%, 0 92%)",
+            duration: 5,
+            ease: "linear",
+          }
+        );
+        thirdAnimation.fromTo(
+          ".third",
+          {
+            clipPath: "polygon(0 12%, 100% 3%, 100% 98%, 0 92%)",
+          },
+          {
+            clipPath: "polygon(0 3%, 100% 2%, 100% 98%, 0 94%)",
+            duration: 5,
+            delay: 0.5,
+            ease: "linear",
+          }
+        );
+        // 將 thirdAnimation 加入 thirdTextAnimation
+        thirdTextAnimation.add(thirdAnimation, 0);
+
+        //fourth section animation
+        var fourthAnimation = gsap.timeline({
+          repeat: -1,
+          repeatDelay: 0,
+          yoyo: true,
+        });
+        fourthAnimation.fromTo(
+          [".fourth .container .imgs", ".fourth .container .imgs"],
+          { yPercent: 0 },
+          { yPercent: -95, duration: 400, ease: "linear", repeat: -1 },
+          "<"
+        );
+        var fourthTitleAnimation = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".fourth .title",
+            start: "top 40%",
+            end: "bottom 40%",
+          },
+        });
+        fourthTitleAnimation.from(".fourth .title .first-title", {
+          x: -100,
+          opacity: 0,
+          duration: 1,
+          ease: "power2.out",
+        });
+        fourthTitleAnimation.from(
+          ".fourth .title .second-title",
+          {
+            x: -100,
+            opacity: 0,
+            duration: 1,
+            delay: 0.3,
+            ease: "power2.out",
+          },
+          "<"
+        );
+        fourthTitleAnimation.from(
+          ".fourth .container .imgs",
+          {
+            opacity: 0,
+            duration: 1,
+          },
+          "<"
+        );
+
+        //footer animation
+        var footerAnimation = gsap.timeline({
+          repeat: -1,
+          repeatDelay: 0,
+          yoyo: true,
+        });
+        footerAnimation.fromTo(
+          ["footer", "footer"],
+          { clipPath: "polygon(0 0, 100% 10%, 100% 100%, 0 100%)" },
+          {
+            clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)",
+            duration: 4,
+            ease: "linear",
+          }
+        );
+        footerAnimation.fromTo(
+          ["footer", "footer"],
+          { clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)" },
+          {
+            clipPath: "polygon(0 2%, 100% 15%, 100% 100%, 0 100%)",
+            duration: 4,
+            ease: "linear",
+          }
+        );
+
+        //hide header on scroll down
+        var scrollDown = () => {
+          if (windowWidth.value > 768) {
+            gsap.to("header", {
+              yPercent: -100,
+              duration: 1.5,
+              ease: "power2.out",
+            });
+          } else {
+            gsap.to(".logo", {
+              scrollTrigger: {
+                trigger: ".first",
+                start: "top 20",
+                end: "top 0",
+                scrub: true,
+              },
+              opacity: 0,
+              duration: 1,
+              ease: "power2.out",
+            });
+          }
         };
-      } else {
-        console.error("imgElement not found");
+
+        //show header on scroll up
+        var scrollUp = () => {
+          if (windowWidth.value > 768) {
+            gsap.to("header", {
+              yPercent: 0,
+              duration: 1.5,
+              ease: "power2.out",
+            });
+            // } else {
+            //   gsap.to("header .logo", {
+            //     scrollTrigger: {
+            //       trigger: ".first",
+            //       start: "bottom top",
+            //       end: "top top",
+            //     },
+            //     opacity: 1,
+            //     duration: 1,
+            //     ease: "power2.out",
+            //   });
+          }
+        };
+
+        // 更新 windowWidth 當視窗大小改變時
+        window.addEventListener("resize", () => {
+          windowWidth.value = window.innerWidth;
+          if (windowWidth.value < 768) {
+            scrollUp();
+          }
+        });
+
+        Observer.create({
+          type: "wheel,touch,pointer",
+          wheelSpeed: -1,
+          onDown: () => scrollUp(),
+          onUp: () => scrollDown(),
+        });
+      } catch (error) {
+        console.error(error);
       }
-
-      //banner animation
-      gsap.from(".banner-container .bottom img", {
-        opacity: 0,
-        duration: 5,
-        ease: "power2.out",
-      });
-
-      //first section animation
-      var firstAnimation = gsap.timeline({
-        repeat: -1,
-        repeatDelay: 0,
-        yoyo: true,
-      });
-      firstAnimation.fromTo(
-        ".first",
-        {
-          clipPath: "polygon(0 0, 100% 10%, 100% 95%, 0 100%)",
-        },
-        {
-          clipPath: "polygon(0 3%, 100% 10%, 100% 91%, 0 98%)",
-          duration: 4,
-          ease: "linear",
-        }
-      );
-      firstAnimation.fromTo(
-        ".first",
-        {
-          clipPath: "polygon(0 3%, 100% 10%, 100% 91%, 0 98%)",
-        },
-        {
-          clipPath: "polygon(0 2%, 100% 7%, 100% 94%, 0 98%)",
-          duration: 4,
-          ease: "linear",
-        }
-      );
-
-      //second section animation
-      var secondAnimation = gsap.timeline({
-        repeat: -1,
-        repeatDelay: 0,
-        yoyo: true,
-      });
-      secondAnimation.fromTo(
-        [".first-img", ".first-img"],
-        {
-          backgroundPositionX: "69%",
-        },
-        {
-          backgroundPositionX: "59%",
-          duration: 30,
-          ease: "linear",
-          yoyo: true,
-          repeat: -1,
-        }
-      );
-      secondAnimation.fromTo(
-        [".second-img", ".second-img"],
-        {
-          backgroundPositionX: "5%",
-        },
-        {
-          backgroundPositionX: "30%",
-          duration: 10,
-          ease: "linear",
-          yoyo: true,
-          repeat: -1,
-        },
-        "<"
-      );
-      secondAnimation.fromTo(
-        [".third-img", ".third-img"],
-        {
-          backgroundPositionX: "20%",
-        },
-        {
-          backgroundPositionX: "50%",
-          duration: 15,
-          ease: "linear",
-          yoyo: true,
-          repeat: -1,
-        },
-        "<"
-      );
-      var secondTitleAnimation = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".second .title",
-          start: "top 40%",
-          end: "bottom 40%",
-        },
-      });
-      secondTitleAnimation.from(".second .title .first-title", {
-        x: -100,
-        opacity: 0,
-        duration: 1,
-        ease: "power2.out",
-      });
-      secondTitleAnimation.from(
-        ".second .title .second-title",
-        {
-          x: -100,
-          opacity: 0,
-          duration: 1,
-          delay: 0.3,
-          ease: "power2.out",
-        },
-        "<"
-      );
-      secondTitleAnimation.from(".second .container .img", {
-        opacity: 0,
-        duration: 1,
-        stagger: 0.5,
-      });
-
-      //third section animation
-      var thirdAnimation = gsap.timeline({
-        repeat: -1,
-        repeatDelay: 0,
-        yoyo: true,
-      });
-      thirdAnimation.fromTo(
-        ".third",
-        {
-          clipPath: "polygon(0 10%, 100% 0, 100% 100%, 0 95%)",
-        },
-        {
-          clipPath: "polygon(0 10%, 100% 3%, 100% 98%, 0 91%)",
-          duration: 4,
-          ease: "linear",
-        }
-      );
-      thirdAnimation.fromTo(
-        ".third",
-        {
-          clipPath: "polygon(0 10%, 100% 3%, 100% 98%, 0 91%)",
-        },
-        {
-          clipPath: "polygon(0 7%, 100% 2%, 100% 98%, 0 94%)",
-          duration: 4,
-          ease: "linear",
-        }
-      );
-      var thirdTextAnimation = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".third .top",
-          start: "top 40%",
-          end: "bottom 40%",
-        },
-      });
-      thirdTextAnimation.from(".third .top .text-content", {
-        opacity: 0,
-        duration: 1,
-        ease: "power2.out",
-      });
-      thirdTextAnimation.from(
-        ".third .bottom .img",
-        {
-          opacity: 0,
-          duration: 1,
-          ease: "power2.out",
-          delay: 0.3,
-        },
-        "<"
-      );
-
-      //fourth section animation
-      var fourthAnimation = gsap.timeline({
-        repeat: -1,
-        repeatDelay: 0,
-        yoyo: true,
-      });
-      fourthAnimation.fromTo(
-        [".fourth .container .imgs", ".fourth .container .imgs"],
-        { yPercent: 0 },
-        { yPercent: -95, duration: 400, ease: "linear", repeat: -1 },
-        "<"
-      );
-      var fourthTitleAnimation = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".fourth .title",
-          start: "top 40%",
-          end: "bottom 40%",
-        },
-      });
-      fourthTitleAnimation.from(".fourth .title .first-title", {
-        x: -100,
-        opacity: 0,
-        duration: 1,
-        ease: "power2.out",
-      });
-      fourthTitleAnimation.from(
-        ".fourth .title .second-title",
-        {
-          x: -100,
-          opacity: 0,
-          duration: 1,
-          delay: 0.3,
-          ease: "power2.out",
-        },
-        "<"
-      );
-      fourthTitleAnimation.from(
-        ".fourth .container .imgs",
-        {
-          opacity: 0,
-          duration: 1,
-        },
-        "<"
-      );
-
-      //footer animation
-      var footerAnimation = gsap.timeline({
-        repeat: -1,
-        repeatDelay: 0,
-        yoyo: true,
-      });
-      footerAnimation.fromTo(
-        ["footer", "footer"],
-        { clipPath: "polygon(0 0, 100% 10%, 100% 100%, 0 100%)" },
-        {
-          clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)",
-          duration: 4,
-          ease: "linear",
-        }
-      );
-      footerAnimation.fromTo(
-        ["footer", "footer"],
-        { clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)" },
-        {
-          clipPath: "polygon(0 2%, 100% 15%, 100% 100%, 0 100%)",
-          duration: 4,
-          ease: "linear",
-        }
-      );
-
-      //hide header on scroll down
-      var scrollDown = () => {
-        gsap.to("header", {
-          yPercent: -100,
-          duration: 1.5,
-          ease: "power2.out",
-        });
-      };
-
-      //show header on scroll up
-      var scrollUp = () => {
-        gsap.to("header", {
-          yPercent: 0,
-          duration: 1.5,
-          ease: "power2.out",
-        });
-      };
-
-      // 更新 windowWidth 當視窗大小改變時
-      window.addEventListener("resize", () => {
-        windowWidth.value = window.innerWidth;
-        if (windowWidth.value < 768) {
-          scrollUp();
-        }
-      });
-
-      Observer.create({
-        type: "wheel,touch,pointer",
-        wheelSpeed: -1,
-        onDown: () => windowWidth.value > 768 && scrollUp(),
-        onUp: () => windowWidth.value > 768 && scrollDown(),
-      });
     });
 
     return {
@@ -328,6 +405,9 @@ export default {
       artistImg,
       artworkImgs,
       logoColor,
+      eihibitionImg1,
+      eihibitionImg2,
+      eihibitionImg3,
     };
   },
 };
@@ -386,11 +466,20 @@ export default {
       </div>
       <div class="container">
         <div class="top">
-          <div class="img first-img"></div>
-          <div class="img second-img"></div>
+          <div
+            class="img first-img"
+            :style="{ 'background-image': `url(${eihibitionImg1})` }"
+          ></div>
+          <div
+            class="img second-img"
+            :style="{ 'background-image': `url(${eihibitionImg2})` }"
+          ></div>
         </div>
         <div class="bottom">
-          <div class="img third-img"></div>
+          <div
+            class="img third-img"
+            :style="{ 'background-image': `url(${eihibitionImg3})` }"
+          ></div>
         </div>
       </div>
     </section>
@@ -452,74 +541,82 @@ export default {
   align-items: center;
   justify-content: center;
   background: #fff;
-  display: none;
-}
-.spinner {
-  --radius: 100;
-  --size: 50;
-  position: relative;
-  width: calc(var(--size) * 1px);
-  height: calc(var(--size) * 1px);
-  div {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: #474bff;
-    border-radius: 50%;
-    transform: rotate(calc(var(--angle) * 1deg))
-      translate(0, calc(var(--radius) * 0px));
-    animation: spinner-19rk4d 1.5s calc(var(--delay) * 1.2s) infinite ease;
+  // display: none;
+  .spinner {
+    --radius: 90;
+    --size: 35;
+    @media (max-width: 1024px) {
+      --radius: 70;
+      --size: 30;
+    }
+    @media (max-width: 768px) {
+      --radius: 50;
+      --size: 20;
+    }
+    position: relative;
+    width: calc(var(--size) * 1px);
+    height: calc(var(--size) * 1px);
+    div {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #232323;
+      border-radius: 50%;
+      transform: rotate(calc(var(--angle) * 1deg))
+        translate(0, calc(var(--radius) * 0px));
+      animation: spinner-19rk4d 2s calc(var(--delay) * 1.2s) infinite ease;
 
-    @keyframes spinner-19rk4d {
-      0%,
-      30%,
-      50%,
-      100% {
-        transform: rotate(calc(var(--angle) * 1deg))
-          translate(0, calc(var(--radius) * 0px)) scale(0);
+      @keyframes spinner-19rk4d {
+        0%,
+        30%,
+        50%,
+        100% {
+          transform: rotate(calc(var(--angle) * 1deg))
+            translate(0, calc(var(--radius) * 0px)) scale(0);
+        }
+
+        40% {
+          transform: rotate(calc(var(--angle) * 1deg))
+            translate(0, calc(var(--radius) * 1px)) scale(1);
+        }
+      }
+      &:nth-child(1) {
+        --angle: 45;
+        --delay: 0.1;
+      }
+      &:nth-child(2) {
+        --angle: 90;
+        --delay: 0.2;
+      }
+      &:nth-child(3) {
+        --angle: 135;
+        --delay: 0.3;
       }
 
-      40% {
-        transform: rotate(calc(var(--angle) * 1deg))
-          translate(0, calc(var(--radius) * 1px)) scale(1);
+      &:nth-child(4) {
+        --angle: 180;
+        --delay: 0.4;
       }
-    }
-    &:nth-child(1) {
-      --angle: 45;
-      --delay: 0.1;
-    }
-    &:nth-child(2) {
-      --angle: 90;
-      --delay: 0.2;
-    }
-    &:nth-child(3) {
-      --angle: 135;
-      --delay: 0.3;
-    }
 
-    &:nth-child(4) {
-      --angle: 180;
-      --delay: 0.4;
-    }
+      &:nth-child(5) {
+        --angle: 225;
+        --delay: 0.5;
+      }
 
-    &:nth-child(5) {
-      --angle: 225;
-      --delay: 0.5;
-    }
+      &:nth-child(6) {
+        --angle: 270;
+        --delay: 0.6;
+      }
 
-    &:nth-child(6) {
-      --angle: 270;
-      --delay: 0.6;
-    }
+      &:nth-child(7) {
+        --angle: 315;
+        --delay: 0.7;
+      }
 
-    &:nth-child(7) {
-      --angle: 315;
-      --delay: 0.7;
-    }
-
-    &:nth-child(8) {
-      --angle: 360;
-      --delay: 0.8;
+      &:nth-child(8) {
+        --angle: 360;
+        --delay: 0.8;
+      }
     }
   }
 }
@@ -554,6 +651,14 @@ header {
     i {
       font-weight: bold;
       font-size: 40px;
+      color: #232323;
+      cursor: pointer;
+      @media (max-width: 1024px) {
+        font-size: 35px;
+      }
+      @media (max-width: 768px) {
+        font-size: 30px;
+      }
     }
   }
 }
@@ -610,17 +715,18 @@ header {
 
 .first {
   background: #fff;
-  padding: 10vh 5vw 10vh 5vw;
+  padding: 12vh 5vw 8vh 5vw;
   display: flex;
   justify-content: center;
   align-items: center;
+  clip-path: polygon(0 0, 100% 8%, 100% 99%, 0 100%);
   .text-content {
     max-width: 1200px;
     color: #545458;
     font-weight: bold;
   }
   @media (max-width: 768px) {
-    padding: 8vh 8vw 8vh 8vw;
+    padding: 12vh 8vw 6vh 8vw;
   }
 }
 
@@ -672,7 +778,7 @@ header {
       .first-img {
         width: 28vw;
         height: 50vw;
-        background-image: url("@/assets/exhibition6.jpg");
+        // background-image: url("@/assets/exhibition6.jpg");
         background-repeat: no-repeat;
         background-size: cover;
         transform: translateY(20vw);
@@ -685,7 +791,7 @@ header {
       .second-img {
         width: 42vw;
         height: 28vw;
-        background-image: url("@/assets/exhibition5.jpg");
+        // background-image: url("@/assets/exhibition5.jpg");
         background-repeat: no-repeat;
         background-size: cover;
         @media (max-width: 1024px) {
@@ -711,7 +817,7 @@ header {
       .third-img {
         width: 28vw;
         height: 27vw;
-        background-image: url("@/assets/exhibition4.jpg");
+        // background-image: url("@/assets/exhibition4.jpg");
         background-repeat: no-repeat;
         background-size: cover;
         transform: translateX(-5vw);
@@ -756,6 +862,7 @@ header {
   flex-direction: column;
   color: #545458;
   font-weight: bold;
+  clip-path: polygon(0 8%, 100% 0, 100% 100%, 0 95%);
   .top {
     width: 100%;
     display: flex;
