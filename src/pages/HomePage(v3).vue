@@ -22,6 +22,20 @@ export default {
     const logoColor = ref("");
     const windowWidth = ref(window.innerWidth);
 
+    const flatImages = require
+      .context("@/assets/artworks/normalized/", false, /\.(jpe?g)$/)
+      .keys()
+      .map((key) => {
+        const fileName = key.replace("./", "");
+        return {
+          url: require(`@/assets/artworks/normalized/${fileName}`),
+          id: fileName,
+        };
+      });
+
+    // 打亂圖片
+    artworkImgs.value = [...flatImages].sort(() => Math.random() - 0.5);
+
     // 創建一個函數來加載圖片並返回一個 Promise
     const loadImage = (src) => {
       return new Promise((resolve, reject) => {
@@ -113,7 +127,7 @@ export default {
           },
           {
             clipPath: "polygon(0 4%, 100% 12%, 100% 92%, 0 95%)",
-            duration: 5,
+            duration: 3,
             ease: "linear",
           }
         );
@@ -125,7 +139,7 @@ export default {
           {
             delay: 0.5,
             clipPath: "polygon(0 2%, 100% 7%, 100% 98%, 0 98%)",
-            duration: 5,
+            duration: 3,
             ease: "linear",
           }
         );
@@ -215,21 +229,7 @@ export default {
             end: "bottom 40%",
           },
         });
-        thirdTextAnimation.from(".third .top .text-content", {
-          opacity: 0,
-          duration: 1,
-          ease: "power2.out",
-        });
-        thirdTextAnimation.from(
-          ".third .bottom .img",
-          {
-            opacity: 0,
-            duration: 1,
-            ease: "power2.out",
-            delay: 0.3,
-          },
-          "<"
-        );
+
         var thirdAnimation = gsap.timeline({
           repeat: -1,
           repeatDelay: 0.5,
@@ -242,7 +242,7 @@ export default {
           },
           {
             clipPath: "polygon(0 12%, 100% 3%, 100% 98%, 0 92%)",
-            duration: 5,
+            duration: 3,
             ease: "linear",
           }
         );
@@ -252,14 +252,34 @@ export default {
             clipPath: "polygon(0 12%, 100% 3%, 100% 98%, 0 92%)",
           },
           {
-            clipPath: "polygon(0 3%, 100% 2%, 100% 98%, 0 94%)",
-            duration: 5,
+            clipPath: "polygon(0 7%, 100% 2%, 100% 98%, 0 94%)",
+            duration: 3,
             delay: 0.5,
             ease: "linear",
           }
         );
         // 將 thirdAnimation 加入 thirdTextAnimation
         thirdTextAnimation.add(thirdAnimation, 0);
+
+        thirdTextAnimation.from(
+          ".third .top .text-content",
+          {
+            opacity: 0,
+            duration: 1,
+            ease: "power2.out",
+          },
+          "<"
+        );
+        thirdTextAnimation.from(
+          ".third .bottom .img",
+          {
+            opacity: 0,
+            duration: 1,
+            ease: "power2.out",
+            delay: 0.3,
+          },
+          "<"
+        );
 
         //fourth section animation
         var fourthAnimation = gsap.timeline({
@@ -270,7 +290,7 @@ export default {
         fourthAnimation.fromTo(
           [".fourth .imgs", ".fourth .imgs"],
           { yPercent: 0 },
-          { yPercent: -80, duration: 160, ease: "linear", repeat: -1 },
+          { yPercent: -80, duration: 200, ease: "linear", repeat: -1 },
           "<"
         );
         var fourthTitleAnimation = gsap.timeline({
@@ -322,7 +342,7 @@ export default {
           { clipPath: "polygon(0 0, 100% 10%, 100% 100%, 0 100%)" },
           {
             clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)",
-            duration: 4,
+            duration: 3,
             ease: "linear",
           }
         );
@@ -331,7 +351,7 @@ export default {
           { clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)" },
           {
             clipPath: "polygon(0 2%, 100% 15%, 100% 100%, 0 100%)",
-            duration: 4,
+            duration: 3,
             ease: "linear",
           }
         );
@@ -436,14 +456,14 @@ export default {
     <div class="bottom">
       <div class="imgs">
         <div class="img-container" v-for="img in artworkImgs" :key="img">
-          <router-link :to="`/artwork?id=${img.id}`">
+          <router-link :to="`/artworkpage/artwork?id=${img.id}`">
             <img :src="img.url" />
           </router-link>
         </div>
       </div>
     </div>
     <div class="btn">
-      <router-link to="/artwork">
+      <router-link to="/artworkpage">
         <h1>View All</h1>
         <i class="material-icons">open_in_new</i>
       </router-link>
@@ -461,48 +481,6 @@ export default {
 </template>
 
 <style scoped lang="scss">
-header {
-  height: 150px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: fixed;
-  z-index: 999;
-  top: 0;
-  left: 0;
-  // background: #232323;
-  padding: 0 3vw;
-  .logo {
-    h1 {
-      text-transform: uppercase;
-      font-family: "Playfair Display";
-      line-height: normal;
-      font-weight: 500;
-      color: #f8bc6e;
-    }
-    h6 {
-      font-family: "Qwigley";
-      font-weight: 400;
-      color: #fff;
-    }
-  }
-  .navbar {
-    i {
-      font-weight: bold;
-      font-size: 40px;
-      color: #232323;
-      cursor: pointer;
-      @media (max-width: 1024px) {
-        font-size: 35px;
-      }
-      @media (max-width: 768px) {
-        font-size: 30px;
-      }
-    }
-  }
-}
-
 .banner-animation {
   width: 100%;
   height: 100vh;
@@ -845,17 +823,23 @@ header {
   }
 
   .btn {
+    --btn-size: 45px;
+    @media (max-width: 1024px) {
+      --btn-size: 35px;
+    }
+    @media (max-width: 768px) {
+      --btn-size: 25px;
+    }
     margin-top: 8vh;
     a {
       display: flex;
       align-items: center;
       justify-content: center;
-      --btn-size: 50px;
       --img-clip-path: 20px;
       padding: 2vh 5vw;
       color: #545458;
       background: #f8bc6e;
-      font-size: var(--btn-size);
+      font-size: 3vw;
       clip-path: polygon(
         var(--img-clip-path) 0,
         0 var(--img-clip-path),
@@ -870,6 +854,9 @@ header {
         font-weight: bold;
         // margin-left: 15px;
         font-size: var(--btn-size);
+      }
+      i {
+        margin-left: 10px;
       }
     }
   }

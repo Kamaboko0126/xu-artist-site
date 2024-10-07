@@ -1,5 +1,5 @@
 <script>
-import { onMounted, provide, ref } from "vue";
+import { onMounted, provide, ref, nextTick } from "vue";
 import { gsap } from "gsap";
 import { Observer } from "gsap/Observer";
 import { useRoute, useRouter } from "vue-router";
@@ -12,48 +12,35 @@ export default {
     const windowWidth = ref(window.innerWidth);
     const isHomepage = ref(false);
 
-    // 動態引入 assets/artworks/normalized 目錄中的所有圖片
-    const flatImages = require
-      .context("@/assets/artworks/normalized/", false, /\.(jpe?g)$/)
-      .keys()
-      .map((key) => {
-        const fileName = key.replace("./", "");
-        return {
-          url: require(`@/assets/artworks/normalized/${fileName}`),
-          id: fileName,
-        };
-      });
+    const route = useRoute();
+    const router = useRouter();
 
-    // 打亂圖片
-    artworkImgs.value = [...flatImages].sort(() => Math.random() - 0.5);
-
-    // 創建一個函數來加載圖片並返回一個 Promise
-    const loadImage = (src) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = resolve;
-        img.onerror = reject;
-      });
-    };
-
-    // 等待所有圖片載入完成
-    const loadAllImages = async () => {
-      const imageSources = [...artworkImgs.value.map((img) => img.url)];
-      try {
-        await Promise.all(imageSources.map((src) => loadImage(src)));
-        console.log("All images loaded successfully from App.vue");
-      } catch (error) {
-        console.error("Error loading images:", error);
+    const checkRoute = () => {
+      console.log("Current route:", route.path);
+      // 你可以在這裡根據路由做一些處理
+      if (route.path === "/") {
+        isHomepage.value = true;
+      } else {
+        isHomepage.value = false;
+        gsap.to("header", {
+          yPercent: 0,
+          duration: 1.5,
+          ease: "power2.out",
+        });
       }
     };
-
     onMounted(async () => {
       gsap.registerPlugin(Observer);
 
       try {
-        await loadAllImages();
-        console.log("All images loaded from App.vue");
+        await nextTick();
+
+        checkRoute();
+
+        router.afterEach((to) => {
+          checkRoute();
+          console.log("Route changed to:", to.path);
+        });
 
         // 更新 windowWidth 當視窗大小改變時
         window.addEventListener("resize", () => {
@@ -112,32 +99,6 @@ export default {
       }
     });
 
-    const router = useRouter();
-    const route = useRoute();
-
-    // 檢查是否在首頁
-    const checkIfHomepage = (path) => {
-      isHomepage.value = path === "/";
-      if (!isHomepage.value) {
-        gsap.to("header", {
-          yPercent: 0,
-          duration: 1.5,
-          ease: "power2.out",
-        });
-      }
-    };
-
-    // 初次載入時檢查
-    checkIfHomepage(route.path);
-
-    // 監聽路由變化
-    router.afterEach((to, from) => {
-      console.log(`Route changed from ${from.path} to ${to.path}`);
-      checkIfHomepage(to.path);
-    });
-
-    console.log("Current route path:", route.path);
-
     return {
       isHomepage,
     };
@@ -160,15 +121,17 @@ export default {
   </div>
 
   <header>
-    <div class="logo">
-      <h1>Seaport Handicrafts</h1>
-      <h6 :style="{ color: isHomepage ? '#fff' : '#232323' }">
-        - Contemporary Knot Art of Hsu Pei-Tzu -
-      </h6>
-    </div>
-    <div class="navbar">
-      <!-- <i class="material-icons">menu</i> -->
-    </div>
+    <router-link to="/">
+      <div class="logo">
+        <h1>Seaport Handicrafts</h1>
+        <h6 :style="{ color: isHomepage ? '#fff' : '#232323' }">
+          - Contemporary Knot Art of Hsu Pei-Tzu -
+        </h6>
+      </div>
+      <div class="navbar">
+        <!-- <i class="material-icons">menu</i> -->
+      </div>
+    </router-link>
   </header>
 
   <router-view></router-view>
@@ -180,7 +143,7 @@ export default {
   --h1-size: 30px;
   --h6-size: 30px;
   --line-height: 2;
-  --header-height: 150px;
+  --header-height: 110px;
 
   @media (max-width: 1024px) {
     --main-font-size: 17px;
@@ -325,7 +288,7 @@ header {
   height: var(--header-height);
   width: 100%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   position: fixed;
   z-index: 999;
