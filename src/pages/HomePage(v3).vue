@@ -9,6 +9,7 @@ export default {
     const bannerImg = ref(require("@/assets/banner.jpg"));
     const iconImg = ref(require("@/assets/icons/icon.png"));
     const artistImg = ref(require("@/assets/artist2.jpg"));
+    const btnImg = ref(require("@/assets/btn.png"));
     const eihibitionImg1 = ref(
       require("@/assets/exhibition-images/exhibition6.jpg")
     );
@@ -374,6 +375,7 @@ export default {
       eihibitionImg1,
       eihibitionImg2,
       eihibitionImg3,
+      btnImg,
     };
   },
 };
@@ -794,7 +796,7 @@ export default {
     }
   }
   .bottom {
-    height: 75vh;
+    height: 85vh;
     width: 90%;
     max-width: 1200px;
     display: flex;
@@ -843,23 +845,23 @@ export default {
       align-items: flex-start;
     }
 
-    --btn-size: 45px;
-    @media (max-width: 1024px) {
-      --btn-size: 35px;
-    }
-    @media (max-width: 768px) {
-      --btn-size: 25px;
-    }
     a {
+      width: 100%;
+      transform: translateY(-100%);
+      padding: 1vh 0;
       display: flex;
       align-items: center;
       justify-content: center;
       --img-clip-path: 20px;
-      padding: 2vh 0;
       color: #fff;
-      // background: #ffffffad;
-      font-size: 3vw;
-      border-radius: 20px;
+      background: rgb(35, 35, 35);
+
+      background: linear-gradient(
+        180deg,
+        rgba(24, 24, 24, 0.4) 0%,
+        rgba(26, 26, 26, 0.9) 100%
+      );
+      font-size: 2vw;
       // clip-path: polygon(
       //   var(--img-clip-path) 0,
       //   0 var(--img-clip-path),
