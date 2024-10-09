@@ -107,7 +107,7 @@ export default {
 </script>
 
 <template>
-  <!-- <div class="loader">
+  <div class="loader">
     <div class="spinner">
       <div></div>
       <div></div>
@@ -118,9 +118,9 @@ export default {
       <div></div>
       <div></div>
     </div>
-  </div> -->
+  </div>
 
-  <!-- <header>
+  <header>
     <router-link to="/">
       <div class="logo">
         <h1>Creation Exhibistion</h1>
@@ -129,9 +129,10 @@ export default {
         </h6>
       </div>
       <div class="navbar">
+        <!-- <i class="material-icons">menu</i> -->
       </div>
     </router-link>
-  </header> -->
+  </header>
 
   <router-view></router-view>
 </template>
