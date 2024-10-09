@@ -107,7 +107,7 @@ export default {
 </script>
 
 <template>
-  <div class="loader">
+  <!-- <div class="loader">
     <div class="spinner">
       <div></div>
       <div></div>
@@ -118,21 +118,20 @@ export default {
       <div></div>
       <div></div>
     </div>
-  </div>
+  </div> -->
 
-  <header>
+  <!-- <header>
     <router-link to="/">
       <div class="logo">
-        <h1>Seaport Handicrafts</h1>
+        <h1>Creation Exhibistion</h1>
         <h6 :style="{ color: isHomepage ? '#fff' : '#232323' }">
-          - Contemporary Knot Art of Hsu Pei-Tzu -
+          - Skillful Art of Hsu, Pi-Tze -
         </h6>
       </div>
       <div class="navbar">
-        <!-- <i class="material-icons">menu</i> -->
       </div>
     </router-link>
-  </header>
+  </header> -->
 
   <router-view></router-view>
 </template>

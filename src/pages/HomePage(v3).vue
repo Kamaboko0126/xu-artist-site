@@ -317,19 +317,19 @@ export default {
           },
           "<"
         );
-        fourthTitleAnimation.from(
-          ".fourth .imgs",
-          {
-            opacity: 0,
-            duration: 1,
-            delay: 0.4,
-          },
-          "<"
-        );
-        fourthTitleAnimation.from(".fourth .btn", {
-          opacity: 0,
-          duration: 1,
-        });
+        // fourthTitleAnimation.from(
+        //   ".fourth .imgs",
+        //   {
+        //     opacity: 0,
+        //     duration: 1,
+        //     delay: 0.4,
+        //   },
+        //   "<"
+        // );
+        // fourthTitleAnimation.from(".fourth .btn", {
+        //   opacity: 0,
+        //   duration: 1,
+        // });
 
         //footer animation
         var footerAnimation = gsap.timeline({
@@ -404,7 +404,7 @@ export default {
 
     <section class="second">
       <div class="title">
-        <h1 class="first-title">Seaport</h1>
+        <h1 class="first-title">Seaport Art Center</h1>
         <h1 class="second-title">Exhibition</h1>
       </div>
       <div class="container">
@@ -463,10 +463,12 @@ export default {
       </div>
     </div>
     <div class="btn">
-      <router-link to="/artworkpage">
-        <h1>View All</h1>
-        <i class="material-icons">open_in_new</i>
-      </router-link>
+      <div class="btn-container">
+        <router-link to="/artworkpage">
+          <h1>查看全部</h1>
+          <i class="material-icons">open_in_new</i>
+        </router-link>
+      </div>
     </div>
   </section>
 
@@ -515,17 +517,17 @@ export default {
   .bottom {
     width: 100%;
     height: 100%;
-    padding: 0 0 7vh 7vw;
+    padding: 0 0 6vh 6vw;
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
     @media (max-width: 768px) {
-      padding: 0 0 4vh 9vw;
+      padding: 0 0 2vh 5vw;
     }
     img {
       height: 50%;
       @media (max-width: 768px) {
-        height: 40%;
+        height: 55%;
       }
     }
   }
@@ -560,9 +562,12 @@ export default {
     }
     h1 {
       color: #f8bc6e;
-      font-size: 8vw;
+      font-size: 6vw;
       &:last-child {
         color: #232323;
+      }
+      @media (max-width: 768px) {
+        font-size: 8vw;
       }
     }
   }
@@ -585,9 +590,9 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 10vw 0 2vw 0;
+      padding: 0vh 0 4vh 0;
       @media (max-width: 1024px) {
-        padding: 5vw 0 10vw 0;
+        padding: 0vh 0 10vh 0;
       }
       @media (max-width: 768px) {
         padding: 0;
@@ -778,9 +783,12 @@ export default {
       }
       h1 {
         color: #f8bc6e;
-        font-size: 8vw;
+        font-size: 6vw;
         &:last-child {
           color: #232323;
+        }
+        @media (max-width: 768px) {
+          font-size: 8vw;
         }
       }
     }
@@ -823,6 +831,18 @@ export default {
   }
 
   .btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .btn-container {
+      width: 90%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+    }
+
     --btn-size: 45px;
     @media (max-width: 1024px) {
       --btn-size: 35px;
@@ -830,24 +850,24 @@ export default {
     @media (max-width: 768px) {
       --btn-size: 25px;
     }
-    margin-top: 8vh;
     a {
       display: flex;
       align-items: center;
       justify-content: center;
       --img-clip-path: 20px;
-      padding: 2vh 5vw;
-      color: #545458;
-      background: #f8bc6e;
+      padding: 2vh 0;
+      color: #fff;
+      // background: #ffffffad;
       font-size: 3vw;
-      clip-path: polygon(
-        var(--img-clip-path) 0,
-        0 var(--img-clip-path),
-        0 100%,
-        calc(100% - var(--img-clip-path)) 100%,
-        100% calc(100% - var(--img-clip-path)),
-        100% 0
-      );
+      border-radius: 20px;
+      // clip-path: polygon(
+      //   var(--img-clip-path) 0,
+      //   0 var(--img-clip-path),
+      //   0 100%,
+      //   calc(100% - var(--img-clip-path)) 100%,
+      //   100% calc(100% - var(--img-clip-path)),
+      //   100% 0
+      // );
       cursor: pointer;
       i,
       h1 {
