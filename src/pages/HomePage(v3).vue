@@ -318,43 +318,23 @@ export default {
           },
           "<"
         );
-        // fourthTitleAnimation.from(
-        //   ".fourth .imgs",
-        //   {
-        //     opacity: 0,
-        //     duration: 1,
-        //     delay: 0.4,
-        //   },
-        //   "<"
-        // );
-        // fourthTitleAnimation.from(".fourth .btn", {
-        //   opacity: 0,
-        //   duration: 1,
-        // });
-
-        //footer animation
-        var footerAnimation = gsap.timeline({
-          repeat: -1,
-          repeatDelay: 0,
-          yoyo: true,
-        });
-        footerAnimation.fromTo(
-          ["footer", "footer"],
-          { clipPath: "polygon(0 0, 100% 10%, 100% 100%, 0 100%)" },
+        fourthTitleAnimation.from(
+          ".fourth .imgs",
           {
-            clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)",
-            duration: 3,
-            ease: "linear",
-          }
+            opacity: 0,
+            duration: 1,
+            delay: 0.4,
+          },
+          "<"
         );
-        footerAnimation.fromTo(
-          ["footer", "footer"],
-          { clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)" },
+        fourthTitleAnimation.from(
+          ".fourth .btn",
           {
-            clipPath: "polygon(0 2%, 100% 15%, 100% 100%, 0 100%)",
-            duration: 3,
-            ease: "linear",
-          }
+            opacity: 0,
+            duration: 1,
+            delay: 0.4,
+          },
+          "<"
         );
 
         // 更新 windowWidth 當視窗大小改變時
@@ -409,8 +389,8 @@ export default {
     <section class="second">
       <div class="container">
         <div class="title">
-          <h1 class="first-title font-style">Seaport Art Center</h1>
-          <h1 class="second-title font-style">Exhibition</h1>
+          <h1 class="first-title">Seaport Art Center</h1>
+          <h1 class="second-title">Exhibition</h1>
         </div>
         <div class="imgs">
           <div class="top">
@@ -457,9 +437,9 @@ export default {
   <section class="fourth">
     <div class="container">
       <div class="top">
-        <div class="title ">
-          <h1 class="first-title font-style">Contemporary</h1>
-          <h1 class="second-title font-style">Knot Art</h1>
+        <div class="title">
+          <h1 class="first-title">Contemporary</h1>
+          <h1 class="second-title">Knot Art</h1>
         </div>
       </div>
       <div class="bottom">
@@ -479,15 +459,6 @@ export default {
       </div>
     </div>
   </section>
-
-  <footer>
-    <div class="text-content">
-      <p>
-        Copyright © 2024 Hsu Pei-Tzu. Designed and maintained by Kamaboko Wu.
-        All rights reserved.
-      </p>
-    </div>
-  </footer>
 </template>
 
 <style scoped lang="scss">
@@ -569,7 +540,7 @@ export default {
     max-width: var(--max-width);
   }
   .title {
-    padding: 10vh 10% 3vh 10%;
+    padding: 10vh 10% 0vh 10%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -578,6 +549,7 @@ export default {
       padding: 10vh 4% 5vh 4%;
     }
     h1 {
+      font-family: "Playfair Display";
       color: var(--accent-color);
       font-size: 50px;
       &:last-child {
@@ -819,6 +791,7 @@ export default {
         padding: 0 4% 3vh 4%;
       }
       h1 {
+        font-family: "Playfair Display";
         color: var(--accent-color);
         font-size: 50px;
         &:last-child {
@@ -879,38 +852,28 @@ export default {
     a {
       display: flex;
       align-items: center;
-      padding: 1vh 5%;
-      color: #fff;
-      font-size: 2vw;
+      padding: 0vh 5%;
+      color: var(--sub-color);
+      font-size: 35px;
+      line-height: normal;
       @media (max-width: 1024px) {
-        font-size: 3vw;
+        font-size: 4vw;
       }
       @media (max-width: 768px) {
-        font-size: 5vw;
+        font-size: 5.5vw;
       }
       cursor: pointer;
       i,
       h1 {
         font-weight: bold;
         // margin-left: 15px;
+        line-height: normal;
         font-size: var(--btn-size);
       }
       i {
         margin-left: 10px;
       }
     }
-  }
-}
-
-footer {
-  width: 100%;
-  padding: 10vh 10% 3vh 10%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--background-color);
-  @media (max-width: 768px) {
-    font-size: 1rem;
   }
 }
 </style>

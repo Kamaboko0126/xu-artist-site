@@ -70,13 +70,13 @@ export default {
       if (type === "r") {
         animating.value = true;
         gsap.to("h1.first", {
-          color: "#bb9b45",
+          color: "var(--accent-color)",
           duration: 0.5,
         });
         gsap.to(
           "h1.second",
           {
-            color: "#232323",
+            color: "var(--font-color)",
             duration: 0.5,
           },
           "<"
@@ -104,13 +104,13 @@ export default {
         animating.value = true;
 
         gsap.to("h1.first", {
-          color: "#232323",
+          color: "var(--font-color)",
           duration: 0.5,
         });
         gsap.to(
           "h1.second",
           {
-            color: "#bb9b45",
+            color: "var(--accent-color)",
             duration: 0.5,
           },
           "<"
@@ -173,20 +173,22 @@ export default {
 
 <template>
   <section>
-    <div class="back-btn">
-      <div class="btn-container">
-        <router-link to="/" class="btn">
-          <span class="material-icons">chevron_left</span>
-          <p>回首頁</p>
-        </router-link>
+    <div class="btns">
+      <div class="container">
+        <div class="left">
+          <router-link to="/" class="btn">
+            <i class="material-icons">chevron_left</i>
+            <p>回首頁</p>
+          </router-link>
+        </div>
+        <div class="center">
+          <h1 class="first" @click="switchTo('r')">隨機作品</h1>
+          <h1 class="second" @click="switchTo('c')">查看分類</h1>
+        </div>
       </div>
     </div>
-    <div class="btns">
-      <h1 class="first" @click="switchTo('r')">隨機作品</h1>
-      <h1 class="second" @click="switchTo('c')">查看分類</h1>
-    </div>
-    <div class="container">
-      <div class="animation">
+    <div class="animation">
+      <div class="container">
         <div class="imgs">
           <div class="img-container" v-for="img in artworkImgs" :key="img">
             <router-link :to="`/artworkpage/artwork?id=${img.id}`">
@@ -195,52 +197,52 @@ export default {
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="cards">
-        <div class="cards-container">
-          <router-link to="/artworkpage/class?class=wooden" class="card">
-            <div class="top">
-              <div class="img-container">
-                <div
-                  class="img img1"
-                  :style="{ 'background-image': `url(${classImg1})` }"
-                ></div>
-              </div>
-              <div class="bottom">
-                <h1>木板</h1>
-                <div class="btn">查看更多</div>
-              </div>
-            </div>
-          </router-link>
-          <router-link to="/artworkpage/class?class=mixed" class="card">
-            <div class="top">
-              <div class="img-container">
-                <div
-                  class="img img2"
-                  :style="{ 'background-image': `url(${classImg2})` }"
-                ></div>
-              </div>
+    <div class="cards">
+      <div class="cards-container">
+        <router-link to="/artworkpage/class?class=wooden" class="card">
+          <div class="top">
+            <div class="img-container">
+              <div
+                class="img img1"
+                :style="{ 'background-image': `url(${classImg1})` }"
+              ></div>
             </div>
             <div class="bottom">
-              <h1>裱框</h1>
+              <h1>木板</h1>
               <div class="btn">查看更多</div>
             </div>
-          </router-link>
-          <router-link to="/artworkpage/class?class=solid" class="card">
-            <div class="top">
-              <div class="img-container">
-                <div
-                  class="img img3"
-                  :style="{ 'background-image': `url(${classImg3})` }"
-                ></div>
-              </div>
+          </div>
+        </router-link>
+        <router-link to="/artworkpage/class?class=mixed" class="card">
+          <div class="top">
+            <div class="img-container">
+              <div
+                class="img img2"
+                :style="{ 'background-image': `url(${classImg2})` }"
+              ></div>
             </div>
-            <div class="bottom">
-              <h1>立體</h1>
-              <div class="btn">查看更多</div>
+          </div>
+          <div class="bottom">
+            <h1>裱框</h1>
+            <div class="btn">查看更多</div>
+          </div>
+        </router-link>
+        <router-link to="/artworkpage/class?class=solid" class="card">
+          <div class="top">
+            <div class="img-container">
+              <div
+                class="img img3"
+                :style="{ 'background-image': `url(${classImg3})` }"
+              ></div>
             </div>
-          </router-link>
-        </div>
+          </div>
+          <div class="bottom">
+            <h1>立體</h1>
+            <div class="btn">查看更多</div>
+          </div>
+        </router-link>
       </div>
     </div>
   </section>
@@ -254,49 +256,59 @@ section {
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  .btns {
-    display: flex;
-    margin-bottom: 2%;
-    h1 {
-      cursor: pointer;
-      &:first-child {
-        margin-right: 20px;
-        color: #bb9b45;
-      }
-    }
-  }
 
-  .back-btn {
+  .btns {
     width: 100%;
     display: flex;
-    justify-content: center;
     align-items: center;
-    .btn-container {
+    justify-content: center;
+    margin-bottom: 2%;
+    .container {
       width: 100%;
-      max-width: 1400px;
+      max-width: var(--max-width);
+      justify-content: flex-start;
+      align-items: center;
+      display: flex;
+    }
+    .left {
+      display: flex;
       .btn {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         justify-content: center;
         font-size: calc(var(--h6-size) * 0.8);
-        padding: 1% 3% 1% 0;
         font-weight: 600;
-        color: #4b4b4b;
+        color: var(--font-color);
         cursor: pointer;
-        span {
+        i {
           font-size: calc(var(--h6-size) * 0.8);
+        }
+      }
+    }
+    .center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      h1 {
+        cursor: pointer;
+        &:first-child {
+          margin-right: 20px;
+          color: var(--accent-color);
         }
       }
     }
   }
 
-  .container {
+  .animation {
     position: relative;
     height: calc(calc(100vh - var(--header-height)) * 0.9);
     width: 100%;
     display: flex;
     justify-content: center;
-    .animation {
+    .container {
       height: 90%;
       width: 90%;
       max-width: 1400px;
@@ -332,7 +344,8 @@ section {
         }
       }
     }
-    .cards {
+  }
+  .cards {
       --card-width: 30;
       @media (max-width: 1024px) {
         --card-width: 45;
@@ -340,15 +353,14 @@ section {
       @media (max-width: 768px) {
         --card-width: 55;
       }
-      background: #fff;
-      min-height: calc(calc(100vh - var(--header-height)) * 0.9);
       width: 100%;
       justify-content: center;
+      display: flex;
       align-items: flex-start;
       display: none;
       .cards-container {
         width: 100%;
-        max-width: 1200px;
+        max-width: var(--max-width);
         display: flex;
         align-items: flex-start;
         justify-content: flex-start;
@@ -425,13 +437,12 @@ section {
             flex-direction: column;
             padding: 7% 0;
             .btn {
-              color: #bb9b45;
+              color: var(--accent-color);
               padding-top: 20px;
             }
           }
         }
       }
     }
-  }
 }
 </style>

@@ -9,6 +9,7 @@ export default {
   setup() {
     const artworkImgs = ref();
     provide("artworkImgs", artworkImgs);
+    const bannerImg = ref(require("@/assets/banner.jpg"));
     const windowWidth = ref(window.innerWidth);
     const isHomepage = ref(false);
 
@@ -41,6 +42,33 @@ export default {
           checkRoute();
           console.log("Route changed to:", to.path);
         });
+
+        //footer animation
+        if (isHomepage.value) {
+          var footerAnimation = gsap.timeline({
+            repeat: -1,
+            repeatDelay: 0,
+            yoyo: true,
+          });
+          footerAnimation.fromTo(
+            ["footer", "footer"],
+            { clipPath: "polygon(0 0, 100% 10%, 100% 100%, 0 100%)" },
+            {
+              clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)",
+              duration: 3,
+              ease: "linear",
+            }
+          );
+          footerAnimation.fromTo(
+            ["footer", "footer"],
+            { clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)" },
+            {
+              clipPath: "polygon(0 2%, 100% 15%, 100% 100%, 0 100%)",
+              duration: 3,
+              ease: "linear",
+            }
+          );
+        }
 
         // 更新 windowWidth 當視窗大小改變時
         window.addEventListener("resize", () => {
@@ -101,6 +129,7 @@ export default {
 
     return {
       isHomepage,
+      bannerImg,
     };
   },
 };
@@ -120,13 +149,14 @@ export default {
     </div>
   </div>
 
-  <header>
+  <header
+    :style="[{ 'background-image': isHomepage ? 'none' : `url(${bannerImg})` }]"
+    :class="{ 'not-homepage': !isHomepage }"
+  >
     <router-link to="/">
       <div class="logo">
         <h1>Creation Exhibistion</h1>
-        <h6 :style="{ color: isHomepage ? '#fff' : '#232323' }">
-          - Skillful Art of Hsu, Pi-Tze -
-        </h6>
+        <h6>- Skillful Art of Hsu, Pi-Tze -</h6>
       </div>
       <div class="navbar">
         <!-- <i class="material-icons">menu</i> -->
@@ -135,6 +165,23 @@ export default {
   </header>
 
   <router-view></router-view>
+
+  <footer
+    :style="{ 'background-image': isHomepage ? 'none' : `url(${bannerImg})` }"
+    :class="{ 'not-homepage': !isHomepage }"
+  >
+    <div class="text-content">
+      <p>Copyright © 2024 Hsu Pei-Tzu, All rights reserved.</p>
+      <div class="nav">
+        <router-link to="/">
+          <p>首頁</p>
+        </router-link>
+        <router-link to="/artworkpage">
+          <p>欣賞作品</p>
+        </router-link>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <style lang="scss">
@@ -145,7 +192,8 @@ export default {
   --line-height: 2;
   --header-height: 110px;
   --font-color: #545458;
-  --accent-color: #f8bc6e;
+  --accent-color: #fad275;
+  // --accent-color: #f8bc6e;
   --sub-color: #eff2f1;
   --background-color: #eff2f1;
   --max-width: 1400px;
@@ -178,7 +226,8 @@ a {
   color: inherit;
 }
 
-.text-content p,.font-style {
+.text-content p,
+.font-style {
   line-height: var(--line-height);
   font-feature-settings: "palt" on;
   letter-spacing: 0.15em;
@@ -295,12 +344,19 @@ header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  position: fixed;
   z-index: 999;
   top: 0;
   left: 0;
-  // background: #232323;
   padding: 0 3vw;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: top;
+  position: fixed;
+  &.not-homepage {
+    align-items: center;
+    height: calc(var(--header-height) * 1.1);
+    position: absolute;
+  }
   .logo {
     h1 {
       text-transform: uppercase;
@@ -326,6 +382,62 @@ header {
       }
       @media (max-width: 768px) {
         font-size: 30px;
+      }
+    }
+  }
+}
+
+footer {
+  width: 100%;
+  padding: 8vh 10% 4vh 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--background-color);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  color: var(--font-color);
+  &.not-homepage {
+    color: var(--sub-color);
+    padding: 2vh 10% 2vh 10%;
+  }
+  .text-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      .nav {
+        margin-top: 10px;
+      }
+    }
+  }
+  p {
+    margin: 0;
+    flex-shrink: 1;
+    font-weight: 500;
+  }
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+  .nav {
+    margin-left: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 1;
+    p {
+      font-weight: bold;
+      font-size: calc(var(--main-font-size) + 3px);
+    }
+    a:nth-child(2n) p {
+      &::before {
+        content: "/";
+        margin: 0 10px;
       }
     }
   }
