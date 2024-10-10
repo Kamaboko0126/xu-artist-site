@@ -104,10 +104,10 @@ export default {
       <div class="head-container">
         <router-link to="/artworkpage" class="btn">
           <span class="material-icons">chevron_left</span>
-          <p>返回</p>
+          <p class="font-style">返回</p>
         </router-link>
         <div class="title">
-          <h1>{{ currentData.type }}</h1>
+          <p class="font-style">{{ currentData.type }}</p>
         </div>
         <div></div>
       </div>
@@ -132,8 +132,8 @@ export default {
                 ></div>
               </div>
               <div class="bottom">
-                <h1>{{ data.name }}</h1>
-                <div class="btn">查看更多</div>
+                <p class="font-style">{{ data.name }}</p>
+                <p class="btn font-style">查看更多</p>
               </div>
             </div>
           </router-link>
@@ -146,11 +146,12 @@ export default {
 <style scoped lang="scss">
 section {
   width: 100%;
-  padding-top: calc(var(--header-height) + 40px);
+  padding: 6vh 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
+  position: relative;
 }
 
 .head {
@@ -159,7 +160,7 @@ section {
   align-items: center;
   justify-content: center;
   .head-container {
-    max-width: 1400px;
+    max-width: var(--max-width);
     width: 100%;
     display: flex;
     align-items: center;
@@ -169,26 +170,32 @@ section {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: calc(var(--h6-size) * 0.8);
       padding: 1% 2%;
-      font-weight: 600;
-      color: #4b4b4b;
+      p {
+        font-size: calc(var(--h1-size) * .85);
+        font-weight: 600;
+        color: var(--font-color);
+      }
       cursor: pointer;
       span {
-        font-size: calc(var(--h6-size) * 0.8);
+        font-size: calc(var(--h1-size) * .85);
       }
     }
     .title {
       left: 50%;
       position: absolute;
       transform: translateX(-50%);
+      p {
+        font-size: var(--h1-size);
+        color: var(--font-color);
+        font-weight: 600;
+      }
     }
   }
 }
 
 .container {
   position: relative;
-  height: calc(calc(100vh - var(--header-height)) * 0.9);
   width: 100%;
   display: flex;
   justify-content: center;
@@ -200,8 +207,6 @@ section {
     @media (max-width: 768px) {
       --card-width: 80;
     }
-    background: #fff;
-    min-height: calc(calc(100vh - var(--header-height)) * 0.9);
     width: 100%;
     display: flex;
     justify-content: center;
@@ -286,8 +291,13 @@ section {
           align-items: center;
           flex-direction: column;
           padding: 7% 0;
+          p {
+            font-size: var(--h1-size);
+            color: var(--font-color);
+            font-weight: 600;
+          }
           .btn {
-            color: #bb9b45;
+            color: var(--accent-color);
             padding-top: 15px;
             font-size: var(--main-font-size);
           }

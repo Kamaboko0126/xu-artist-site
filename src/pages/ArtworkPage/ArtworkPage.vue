@@ -100,15 +100,17 @@ export default {
           }"
         ></div>
       </div>
-      <div class="content-text">
-        <h1>
-          {{ filteredData.name }}
-          <span class="en">{{ filteredData.en_name }}</span>
-          <span class="years" v-if="filteredData.years">{{
-            "(" + filteredData.years + ")"
-          }}</span>
-        </h1>
-        <p>{{ filteredData.size }}</p>
+      <div class="info">
+        <div class="top">
+          <p class="name">{{ filteredData.name }}</p>
+          <p class="en">{{ filteredData.en_name }}</p>
+          <p class="years" v-if="filteredData.years">
+            {{ "(" + filteredData.years + ")" }}
+          </p>
+        </div>
+        <div class="bottom" v-if="filteredData.size">
+          <p>{{ filteredData.size }}</p>
+        </div>
       </div>
     </div>
   </section>
@@ -117,13 +119,13 @@ export default {
 <style scoped lang="scss">
 section {
   width: 100%;
-  padding-top: calc(var(--header-height) + 40px);
+  padding: 5vh 0;
   display: flex;
   align-items: flex-start;
   justify-content: center;
   .container {
     width: 100%;
-    max-width: 1400px;
+    max-width: var(--max-width);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -136,13 +138,16 @@ section {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: calc(var(--h6-size) * 0.8);
-    padding: 1% 3%;
+    padding: 3% 3%;
     font-weight: 600;
-    color: #4b4b4b;
+    color: var(--main-font-size);
     cursor: pointer;
+    p {
+      font-size: var(--h1-size);
+      font-size: calc(var(--h1-size) * 0.85);
+    }
     span {
-      font-size: calc(var(--h6-size) * 0.8);
+      font-size: calc(var(--h1-size) * 0.85);
     }
   }
 }
@@ -162,30 +167,35 @@ section {
   }
 }
 
-.content-text {
+.info {
   width: 100%;
   padding: 3% 3%;
-  h1 {
-    color: #232323;
-    font-size: calc(var(--h1-size) * 1.1);
-    span {
+  .top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    p {
+      margin-top: 10px;
+      font-size: var(--h1-size);
+      color: var(--font-color);
+      font-weight: 600;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    p.en {
+      color: var(--accent-color);
       font-size: calc(var(--h1-size) * 0.9);
-      margin-left: 5px;
-      &.en {
-        color: #a1894c;
-      }
-      &.years {
-        font-weight: 100;
-      }
-      &:nth-child(2) {
-        margin-left: 10px;
-      }
+    }
+    p.years {
+      font-weight: 100;
+      font-size: calc(var(--h1-size) * 0.85);
     }
   }
-  p {
+  .bottom {
     margin-top: 10px;
-    font-size: calc(var(--main-font-size) * 1.2);
-    color: #232323;
+    font-size: var(--main-font-size);
+    color: var(--font-color);
   }
 }
 </style>

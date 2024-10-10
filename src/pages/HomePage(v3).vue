@@ -453,7 +453,7 @@ export default {
       </div>
       <div class="btn">
         <router-link to="/artworkpage">
-          <h1 class="font-style">欣賞作品</h1>
+          <h1>欣賞作品</h1>
           <i class="material-icons">open_in_new</i>
         </router-link>
       </div>
@@ -852,15 +852,15 @@ export default {
     a {
       display: flex;
       align-items: center;
-      padding: 0vh 5%;
+      padding: 1vh 5%;
       color: var(--sub-color);
-      font-size: 35px;
+      font-size: 32px;
       line-height: normal;
       @media (max-width: 1024px) {
-        font-size: 4vw;
+        font-size: 3vw;
       }
       @media (max-width: 768px) {
-        font-size: 5.5vw;
+        font-size: 4.5vw;
       }
       cursor: pointer;
       i,

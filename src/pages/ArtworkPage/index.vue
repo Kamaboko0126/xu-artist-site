@@ -69,12 +69,12 @@ export default {
 
       if (type === "r") {
         animating.value = true;
-        gsap.to("h1.first", {
+        gsap.to("p.first", {
           color: "var(--accent-color)",
           duration: 0.5,
         });
         gsap.to(
-          "h1.second",
+          "p.second",
           {
             color: "var(--font-color)",
             duration: 0.5,
@@ -103,12 +103,12 @@ export default {
       } else if (type === "c") {
         animating.value = true;
 
-        gsap.to("h1.first", {
+        gsap.to("p.first", {
           color: "var(--font-color)",
           duration: 0.5,
         });
         gsap.to(
-          "h1.second",
+          "p.second",
           {
             color: "var(--accent-color)",
             duration: 0.5,
@@ -182,8 +182,8 @@ export default {
           </router-link>
         </div>
         <div class="center">
-          <h1 class="first" @click="switchTo('r')">隨機作品</h1>
-          <h1 class="second" @click="switchTo('c')">查看分類</h1>
+          <p class="first" @click="switchTo('r')">隨機作品</p>
+          <p class="second" @click="switchTo('c')">查看分類</p>
         </div>
       </div>
     </div>
@@ -210,8 +210,8 @@ export default {
               ></div>
             </div>
             <div class="bottom">
-              <h1>木板</h1>
-              <div class="btn">查看更多</div>
+              <p>木板</p>
+              <p class="btn">查看更多</p>
             </div>
           </div>
         </router-link>
@@ -225,8 +225,8 @@ export default {
             </div>
           </div>
           <div class="bottom">
-            <h1>裱框</h1>
-            <div class="btn">查看更多</div>
+            <p>裱框</p>
+            <p class="btn">查看更多</p>
           </div>
         </router-link>
         <router-link to="/artworkpage/class?class=solid" class="card">
@@ -239,8 +239,8 @@ export default {
             </div>
           </div>
           <div class="bottom">
-            <h1>立體</h1>
-            <div class="btn">查看更多</div>
+            <p>立體</p>
+            <p class="btn">查看更多</p>
           </div>
         </router-link>
       </div>
@@ -251,24 +251,31 @@ export default {
 <style scoped lang="scss">
 section {
   width: 100%;
-  padding-top: calc(var(--header-height) + 40px);
+  padding: 6vh 0;
+  // padding-top: calc(var(--header-height) + 40px);
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-
+  position: relative;
+  top: 0;
   .btns {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 2%;
+    padding: 0 5% 2vh 5%;
     .container {
       width: 100%;
       max-width: var(--max-width);
       justify-content: flex-start;
       align-items: center;
       display: flex;
+      @media (max-width: 768px) {
+        padding: 0;
+        justify-content: space-between;
+      }
     }
     .left {
       display: flex;
@@ -292,8 +299,16 @@ section {
       display: flex;
       align-items: center;
       justify-content: center;
-      h1 {
+      @media (max-width: 768px) {
+        position: relative;
+        transform: none;
+        left: 0;
+      }
+      p {
+        font-size: var(--h1-size);
+        font-weight: 600;
         cursor: pointer;
+        color: var(--font-color);
         &:first-child {
           margin-right: 20px;
           color: var(--accent-color);
@@ -346,103 +361,108 @@ section {
     }
   }
   .cards {
-      --card-width: 30;
-      @media (max-width: 1024px) {
-        --card-width: 45;
-      }
-      @media (max-width: 768px) {
-        --card-width: 55;
-      }
+    --card-width: 30;
+    @media (max-width: 1024px) {
+      --card-width: 45;
+    }
+    @media (max-width: 768px) {
+      --card-width: 55;
+    }
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    align-items: flex-start;
+    display: none;
+    .cards-container {
       width: 100%;
-      justify-content: center;
+      max-width: var(--max-width);
       display: flex;
       align-items: flex-start;
-      display: none;
-      .cards-container {
-        width: 100%;
-        max-width: var(--max-width);
-        display: flex;
-        align-items: flex-start;
-        justify-content: flex-start;
-        padding: 0 calc(100% / 4 - var(--card-width) * 1% * 3 / 4.3);
+      justify-content: flex-start;
+      padding: 0 calc(100% / 4 - var(--card-width) * 1% * 3 / 4.3);
+      padding-bottom: 10vh;
+      flex-wrap: wrap;
+      @media (max-width: 1024px) {
+        padding: 0 calc(100% / 3 - var(--card-width) * 1% * 2 / 3.5);
         padding-bottom: 10vh;
-        flex-wrap: wrap;
-        @media (max-width: 1024px) {
-          padding: 0 calc(100% / 3 - var(--card-width) * 1% * 2 / 3.5);
-          padding-bottom: 10vh;
+      }
+      @media (max-width: 768px) {
+        padding: 0;
+        padding-bottom: 10vh;
+        align-items: center;
+        flex-direction: column;
+      }
+      .card {
+        &:hover {
+          .img {
+            transform: scale(1.07);
+          }
         }
-        @media (max-width: 768px) {
-          padding: 0;
-          padding-bottom: 10vh;
-          align-items: center;
-          flex-direction: column;
+        width: calc(var(--card-width) * 1%);
+        border: 1px solid #e8e8e8;
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        cursor: pointer;
+        overflow: hidden;
+        &:nth-child(2) {
+          margin: 0 5%;
+          @media (max-width: 1024px) {
+            margin: 0 0 6% 10%;
+          }
+          @media (max-width: 768px) {
+            margin: 5% 0;
+          }
         }
-        .card {
-          &:hover {
+        .top {
+          border-bottom: 1px solid #e8e8e8;
+          width: 100%;
+          .img-container {
+            width: 100%;
+            height: calc(var(--card-width) * 0.6vw);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
             .img {
-              transform: scale(1.07);
+              width: 100%;
+              height: 100%;
+              background-position: center;
+              background-repeat: no-repeat;
+              background-size: cover;
+              transition: 0.5s ease-in-out;
+              &.img1 {
+                background-position: center 35%;
+              }
+              &.img2 {
+                background-position: center 40%;
+              }
+              &.img3 {
+                background-position: center bottom;
+              }
             }
           }
-          width: calc(var(--card-width) * 1%);
-          border: 1px solid #e8e8e8;
-          border-radius: 20px;
+        }
+        .bottom {
           display: flex;
           justify-content: center;
           align-items: center;
           flex-direction: column;
-          cursor: pointer;
-          overflow: hidden;
-          &:nth-child(2) {
-            margin: 0 5%;
-            @media (max-width: 1024px) {
-              margin: 0 0 6% 10%;
-            }
-            @media (max-width: 768px) {
-              margin: 5% 0;
-            }
+          padding: 7% 0;
+          p {
+            font-size: var(--h1-size);
+            font-weight: 600;
           }
-          .top {
-            border-bottom: 1px solid #e8e8e8;
-            width: 100%;
-            .img-container {
-              width: 100%;
-              height: calc(var(--card-width) * 0.6vw);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              overflow: hidden;
-              .img {
-                width: 100%;
-                height: 100%;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                transition: 0.5s ease-in-out;
-                &.img1 {
-                  background-position: center 35%;
-                }
-                &.img2 {
-                  background-position: center 40%;
-                }
-                &.img3 {
-                  background-position: center bottom;
-                }
-              }
-            }
-          }
-          .bottom {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding: 7% 0;
-            .btn {
-              color: var(--accent-color);
-              padding-top: 20px;
-            }
+          .btn {
+            color: var(--accent-color);
+            padding-top: 20px;
+            font-size: var(--main-font-size);
           }
         }
       }
     }
+  }
 }
 </style>

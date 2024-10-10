@@ -18,18 +18,18 @@ export default {
 
     const checkRoute = () => {
       console.log("Current route:", route.path);
-      // 你可以在這裡根據路由做一些處理
       if (route.path === "/") {
         isHomepage.value = true;
       } else {
         isHomepage.value = false;
-        gsap.to("header", {
-          yPercent: 0,
+        gsap.to(".header", {
+          opacity: 1,
           duration: 1.5,
           ease: "power2.out",
         });
       }
     };
+
     onMounted(async () => {
       gsap.registerPlugin(Observer);
 
@@ -41,6 +41,18 @@ export default {
         router.afterEach((to) => {
           checkRoute();
           console.log("Route changed to:", to.path);
+          if (to.path === "/") {
+            console.log("Homepage");
+            isHomepage.value = true;
+          } else {
+            console.log("not Homepage");
+            isHomepage.value = false;
+            gsap.to(".header", {
+              opacity: 1,
+              duration: 1.5,
+              ease: "power2.out",
+            });
+          }
         });
 
         //footer animation
@@ -74,8 +86,8 @@ export default {
         window.addEventListener("resize", () => {
           windowWidth.value = window.innerWidth;
           if (windowWidth.value < 768) {
-            gsap.to("header", {
-              yPercent: 0,
+            gsap.to(".header", {
+              opacity: 1,
               duration: 1.5,
               ease: "power2.out",
             });
@@ -85,8 +97,8 @@ export default {
         //hide header on scroll down
         var scrollDown = () => {
           if (windowWidth.value > 768) {
-            gsap.to("header", {
-              yPercent: -100,
+            gsap.to(".header", {
+              opacity: 0,
               duration: 1.5,
               ease: "power2.out",
             });
@@ -108,8 +120,8 @@ export default {
         //show header on scroll up
         var scrollUp = () => {
           if (windowWidth.value > 768) {
-            gsap.to("header", {
-              yPercent: 0,
+            gsap.to(".header", {
+              opacity: 1,
               duration: 1.5,
               ease: "power2.out",
             });
@@ -149,7 +161,8 @@ export default {
     </div>
   </div>
 
-  <header
+  <div
+    class="header"
     :style="[{ 'background-image': isHomepage ? 'none' : `url(${bannerImg})` }]"
     :class="{ 'not-homepage': !isHomepage }"
   >
@@ -162,7 +175,7 @@ export default {
         <!-- <i class="material-icons">menu</i> -->
       </div>
     </router-link>
-  </header>
+  </div>
 
   <router-view></router-view>
 
@@ -170,7 +183,7 @@ export default {
     :style="{ 'background-image': isHomepage ? 'none' : `url(${bannerImg})` }"
     :class="{ 'not-homepage': !isHomepage }"
   >
-    <div class="text-content">
+    <div class="container">
       <p>Copyright © 2024 Hsu Pei-Tzu, All rights reserved.</p>
       <div class="nav">
         <router-link to="/">
@@ -192,7 +205,7 @@ export default {
   --line-height: 2;
   --header-height: 110px;
   --font-color: #545458;
-  --accent-color: #fad275;
+  --accent-color: #f0c362;
   // --accent-color: #f8bc6e;
   --sub-color: #eff2f1;
   --background-color: #eff2f1;
@@ -226,18 +239,21 @@ a {
   color: inherit;
 }
 
-.text-content p,
-.font-style {
-  line-height: var(--line-height);
+p {
   font-feature-settings: "palt" on;
   letter-spacing: 0.15em;
   display: block;
+  unicode-bidi: isolate;
+  font-size: var(--main-font-size);
+  color: var(--font-color);
+}
+
+.text-content p {
+  line-height: var(--line-height);
   margin-block-start: 1em;
   margin-block-end: 1em;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
-  unicode-bidi: isolate;
-  font-size: var(--main-font-size);
 }
 
 h1 {
@@ -338,7 +354,7 @@ h6 {
   }
 }
 
-header {
+.header {
   height: var(--header-height);
   width: 100%;
   display: flex;
@@ -347,15 +363,18 @@ header {
   z-index: 999;
   top: 0;
   left: 0;
+  padding: 0;
   padding: 0 3vw;
   background-repeat: no-repeat;
   background-size: cover;
   background-position: top;
   position: fixed;
+  box-sizing: border-box;
+  margin: 0;
   &.not-homepage {
     align-items: center;
     height: calc(var(--header-height) * 1.1);
-    position: absolute;
+    position: relative;
   }
   .logo {
     h1 {
@@ -389,7 +408,7 @@ header {
 
 footer {
   width: 100%;
-  padding: 8vh 10% 4vh 10%;
+  padding: 9vh 10% 4vh 10%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -399,33 +418,28 @@ footer {
   background-position: bottom;
   color: var(--font-color);
   &.not-homepage {
-    color: var(--sub-color);
     padding: 2vh 10% 2vh 10%;
+    p {
+      color: var(--sub-color);
+    }
   }
-  .text-content {
+  .container {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     flex-wrap: wrap;
     @media (max-width: 768px) {
       flex-direction: column;
       align-items: center;
-      .nav {
-        margin-top: 10px;
-      }
     }
   }
   p {
-    margin: 0;
     flex-shrink: 1;
     font-weight: 500;
   }
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
   .nav {
-    margin-left: 20px;
+    margin: 0 0 0 20px;
     display: flex;
     justify-content: center;
     align-items: center;
