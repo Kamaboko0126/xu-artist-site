@@ -145,10 +145,10 @@ export default {
   --line-height: 2;
   --header-height: 110px;
   --font-color: #545458;
-  --main-color: #f8bc6e;
-  --second-color: #fff;
-  --third-color: #f8bc6e;
-  --background-color: #EFF2F1;
+  --accent-color: #f8bc6e;
+  --sub-color: #eff2f1;
+  --background-color: #eff2f1;
+  --max-width: 1400px;
 
   @media (max-width: 1024px) {
     --main-font-size: 17px;
@@ -178,7 +178,7 @@ a {
   color: inherit;
 }
 
-.text-content p {
+.text-content p,.font-style {
   line-height: var(--line-height);
   font-feature-settings: "palt" on;
   letter-spacing: 0.15em;
@@ -307,7 +307,7 @@ header {
       font-family: "Playfair Display";
       line-height: normal;
       font-weight: 500;
-      color: #f8bc6e;
+      color: var(--accent-color);
     }
     h6 {
       font-family: "Qwigley";
