@@ -144,6 +144,11 @@ export default {
   --h6-size: 30px;
   --line-height: 2;
   --header-height: 110px;
+  --font-color: #545458;
+  --main-color: #f8bc6e;
+  --second-color: #fff;
+  --third-color: #f8bc6e;
+  --background-color: #EFF2F1;
 
   @media (max-width: 1024px) {
     --main-font-size: 17px;

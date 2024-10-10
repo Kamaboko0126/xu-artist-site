@@ -536,7 +536,7 @@ export default {
 }
 
 .first {
-  background: #fff;
+  background: var(--background-color);
   padding: 12vh 5vw 8vh 5vw;
   display: flex;
   justify-content: center;
@@ -679,7 +679,7 @@ export default {
 }
 
 .third {
-  background: #fff;
+  background: var(--background-color);
   padding: 17vh 2vw 17vh 2vw;
   display: flex;
   justify-content: center;
@@ -890,7 +890,7 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fff;
+  background: var(--background-color);
   @media (max-width: 768px) {
     font-size: 1rem;
   }
