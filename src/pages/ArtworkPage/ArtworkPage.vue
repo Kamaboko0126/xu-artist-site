@@ -119,10 +119,10 @@ export default {
 <style scoped lang="scss">
 section {
   width: 100%;
-  padding: 5vh 0;
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  padding-bottom: 5vh;
   .container {
     width: 100%;
     max-width: var(--max-width);
@@ -135,19 +135,19 @@ section {
 .btn-container {
   width: 100%;
   .btn {
+    padding: 6vh 3%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 3% 3%;
     font-weight: 600;
     color: var(--main-font-size);
     cursor: pointer;
     p {
       font-size: var(--h1-size);
-      font-size: calc(var(--h1-size) * 0.85);
+      font-size: calc(var(--main-font-size) + 2px);
     }
     span {
-      font-size: calc(var(--h1-size) * 0.85);
+      font-size: calc(var(--main-font-size) + 2px);
     }
   }
 }

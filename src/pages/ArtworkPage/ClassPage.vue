@@ -133,7 +133,7 @@ export default {
               </div>
               <div class="bottom">
                 <p class="font-style">{{ data.name }}</p>
-                <p class="btn font-style">查看更多</p>
+                <p class="btn font-style">欣賞作品</p>
               </div>
             </div>
           </router-link>
@@ -146,12 +146,12 @@ export default {
 <style scoped lang="scss">
 section {
   width: 100%;
-  padding: 6vh 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
   position: relative;
+  padding-bottom: 5vh;
 }
 
 .head {
@@ -165,20 +165,19 @@ section {
     display: flex;
     align-items: center;
     position: relative;
-    padding: 0 3% 1.5% 0;
+    padding: 6vh 3%;
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 1% 2%;
       p {
-        font-size: calc(var(--h1-size) * .85);
+        font-size: calc(var(--main-font-size) + 2px);
         font-weight: 600;
         color: var(--font-color);
       }
       cursor: pointer;
       span {
-        font-size: calc(var(--h1-size) * .85);
+        font-size: calc(var(--main-font-size) + 2px);
       }
     }
     .title {
@@ -218,15 +217,12 @@ section {
       align-items: flex-start;
       justify-content: flex-start;
       padding: 0 calc(100% / 4 - var(--card-width) * 1% * 3 / 4.3);
-      padding-bottom: 10vh;
       flex-wrap: wrap;
       @media (max-width: 1024px) {
         padding: 0 calc(100% / 3 - var(--card-width) * 1% * 2 / 3.5);
-        padding-bottom: 10vh;
       }
       @media (max-width: 768px) {
         padding: 0;
-        padding-bottom: 10vh;
         align-items: center;
         flex-direction: column;
       }

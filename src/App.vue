@@ -12,22 +12,72 @@ export default {
     const bannerImg = ref(require("@/assets/banner.jpg"));
     const windowWidth = ref(window.innerWidth);
     const isHomepage = ref(false);
+    const bgm = ref(require("@/assets/bgm.mp3"));
+    const audioRef = ref(null);
+    const isPlaying = ref(false);
 
     const route = useRoute();
     const router = useRouter();
+    var footerAnimation = "";
+
+    const switchMusic = () => {
+      if (isPlaying.value) {
+        audioRef.value.pause();
+        isPlaying.value = false;
+      } else {
+        audioRef.value.play();
+        isPlaying.value = true;
+      }
+    };
 
     const checkRoute = () => {
       console.log("Current route:", route.path);
+      // 你可以在這裡根據路由做一些處理
       if (route.path === "/") {
         isHomepage.value = true;
       } else {
         isHomepage.value = false;
+      }
+
+      if (isHomepage.value) {
+        createTl();
+      } else {
+        console.log("kill animation");
+        footerAnimation = null;
+
         gsap.to(".header", {
           opacity: 1,
           duration: 1.5,
           ease: "power2.out",
         });
       }
+    };
+
+    const createTl = () => {
+      console.log("create animation");
+      footerAnimation = gsap.timeline({
+        repeat: -1,
+        repeatDelay: 0,
+        yoyo: true,
+      });
+      footerAnimation.fromTo(
+        ["footer", "footer"],
+        { clipPath: "polygon(0 0, 100% 10%, 100% 100%, 0 100%)" },
+        {
+          clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)",
+          duration: 3,
+          ease: "linear",
+        }
+      );
+      footerAnimation.fromTo(
+        ["footer", "footer"],
+        { clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)" },
+        {
+          clipPath: "polygon(0 2%, 100% 15%, 100% 100%, 0 100%)",
+          duration: 3,
+          ease: "linear",
+        }
+      );
     };
 
     onMounted(async () => {
@@ -38,15 +88,33 @@ export default {
 
         checkRoute();
 
+        // 監聽用戶的第一次互動事件
+        const playAudioOnInteraction = () => {
+          audioRef.value.play();
+          isPlaying.value = true;
+          window.removeEventListener("click", playAudioOnInteraction);
+          window.removeEventListener("keydown", playAudioOnInteraction);
+        };
+
+        window.addEventListener("click", playAudioOnInteraction);
+        window.addEventListener("keydown", playAudioOnInteraction);
+      
+
         router.afterEach((to) => {
           checkRoute();
           console.log("Route changed to:", to.path);
           if (to.path === "/") {
-            console.log("Homepage");
             isHomepage.value = true;
           } else {
-            console.log("not Homepage");
             isHomepage.value = false;
+          }
+          //footer animation
+          if (isHomepage.value) {
+            createTl();
+          } else {
+            console.log("kill animation");
+            footerAnimation = null;
+
             gsap.to(".header", {
               opacity: 1,
               duration: 1.5,
@@ -54,33 +122,6 @@ export default {
             });
           }
         });
-
-        //footer animation
-        if (isHomepage.value) {
-          var footerAnimation = gsap.timeline({
-            repeat: -1,
-            repeatDelay: 0,
-            yoyo: true,
-          });
-          footerAnimation.fromTo(
-            ["footer", "footer"],
-            { clipPath: "polygon(0 0, 100% 10%, 100% 100%, 0 100%)" },
-            {
-              clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)",
-              duration: 3,
-              ease: "linear",
-            }
-          );
-          footerAnimation.fromTo(
-            ["footer", "footer"],
-            { clipPath: "polygon(0 5%, 100% 25%, 100% 100%, 0 100%)" },
-            {
-              clipPath: "polygon(0 2%, 100% 15%, 100% 100%, 0 100%)",
-              duration: 3,
-              ease: "linear",
-            }
-          );
-        }
 
         // 更新 windowWidth 當視窗大小改變時
         window.addEventListener("resize", () => {
@@ -142,12 +183,17 @@ export default {
     return {
       isHomepage,
       bannerImg,
+      bgm,
+      switchMusic,
+      audioRef,
+      isPlaying,
     };
   },
 };
 </script>
 
 <template>
+  <audio ref="audioRef" :src="bgm" loop></audio>
   <div class="loader">
     <div class="spinner">
       <div></div>
@@ -171,10 +217,12 @@ export default {
         <h1>Creation Exhibistion</h1>
         <h6>- Skillful Art of Hsu, Pi-Tze -</h6>
       </div>
-      <div class="navbar">
-        <!-- <i class="material-icons">menu</i> -->
-      </div>
     </router-link>
+    <div class="navbar">
+      <i class="material-icons" @click="switchMusic">{{
+        isPlaying ? "volume_up" : "volume_off"
+      }}</i>
+    </div>
   </div>
 
   <router-view></router-view>
@@ -391,10 +439,17 @@ h6 {
     }
   }
   .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
     i {
       font-weight: bold;
       font-size: 40px;
-      color: #232323;
+      color: var(--font-color);
+      background: var(--background-color);
+      border-radius: 50%;
+      padding: 5px;
       cursor: pointer;
       @media (max-width: 1024px) {
         font-size: 35px;

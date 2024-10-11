@@ -7,11 +7,26 @@ export default {
   name: "ArtworkPage",
   setup() {
     const artworkImgs = inject("artworkImgs");
-    const classImg1 = ref(require("@/assets/artworks/normalized/16.jpg"));
-    const classImg2 = ref(require("@/assets/artworks/normalized/82.jpg"));
-    const classImg3 = ref(require("@/assets/artworks/normalized/101.jpg"));
     const switchToClass = ref(false);
-    const animating = ref(false);
+    var animating = false;
+
+    const cardsInfo = [
+      {
+        class: "木板",
+        url: "/artworkpage/class?class=wooden",
+        img: require("@/assets/artworks/normalized/16.jpg"),
+      },
+      {
+        class: "裱框",
+        url: "/artworkpage/class?class=mixed",
+        img: require("@/assets/artworks/normalized/82.jpg"),
+      },
+      {
+        class: "立體",
+        url: "/artworkpage/class?class=solid",
+        img: require("@/assets/artworks/normalized/101.jpg"),
+      },
+    ];
 
     const flatImages = require
       .context("@/assets/artworks/normalized/", false, /\.(jpe?g)$/)
@@ -45,7 +60,11 @@ export default {
         duration: 0.2,
         ease: "power2.out",
       });
-      const imageSources = [classImg1.value, classImg2.value, classImg3.value];
+      const imageSources = [
+        require("@/assets/artworks/normalized/16.jpg"),
+        require("@/assets/artworks/normalized/82.jpg"),
+        require("@/assets/artworks/normalized/101.jpg"),
+      ];
       try {
         await Promise.all(imageSources.map((src) => loadImage(src)));
         gsap.to(".loader", {
@@ -62,13 +81,13 @@ export default {
     };
 
     const switchTo = (type) => {
-      if (animating.value) {
+      if (animating) {
         // console.log("Still animating...");
         return;
       }
 
       if (type === "r") {
-        animating.value = true;
+        animating = true;
         gsap.to("p.first", {
           color: "var(--accent-color)",
           duration: 0.5,
@@ -97,11 +116,11 @@ export default {
           delay: 0.5,
           onComplete: () => {
             // console.log("Animation completed");
-            animating.value = false;
+            animating = false;
           },
         });
       } else if (type === "c") {
-        animating.value = true;
+        animating = true;
 
         gsap.to("p.first", {
           color: "var(--font-color)",
@@ -131,7 +150,7 @@ export default {
           delay: 0.5,
           onComplete: () => {
             // console.log("Animation completed");
-            animating.value = false;
+            animating = false;
           },
         });
       }
@@ -161,11 +180,9 @@ export default {
 
     return {
       artworkImgs,
-      classImg1,
-      classImg2,
-      classImg3,
       switchToClass,
       switchTo,
+      cardsInfo,
     };
   },
 };
@@ -182,8 +199,10 @@ export default {
           </router-link>
         </div>
         <div class="center">
-          <p class="first" @click="switchTo('r')">隨機作品</p>
-          <p class="second" @click="switchTo('c')">查看分類</p>
+          <!-- eslint-disable-next-line no-irregular-whitespace -->
+          <p class="first" @click="switchTo('r')">作品瀏覽</p>
+          <!-- eslint-disable-next-line no-irregular-whitespace -->
+          <p class="second" @click="switchTo('c')">作品分類</p>
         </div>
       </div>
     </div>
@@ -201,46 +220,23 @@ export default {
 
     <div class="cards">
       <div class="cards-container">
-        <router-link to="/artworkpage/class?class=wooden" class="card">
+        <router-link
+          v-for="card in cardsInfo"
+          :key="card.id"
+          :to="card.url"
+          class="card"
+        >
           <div class="top">
             <div class="img-container">
               <div
-                class="img img1"
-                :style="{ 'background-image': `url(${classImg1})` }"
-              ></div>
-            </div>
-            <div class="bottom">
-              <p>木板</p>
-              <p class="btn">查看更多</p>
-            </div>
-          </div>
-        </router-link>
-        <router-link to="/artworkpage/class?class=mixed" class="card">
-          <div class="top">
-            <div class="img-container">
-              <div
-                class="img img2"
-                :style="{ 'background-image': `url(${classImg2})` }"
+                class="img"
+                :style="{ 'background-image': `url(${card.img})` }"
               ></div>
             </div>
           </div>
           <div class="bottom">
-            <p>裱框</p>
-            <p class="btn">查看更多</p>
-          </div>
-        </router-link>
-        <router-link to="/artworkpage/class?class=solid" class="card">
-          <div class="top">
-            <div class="img-container">
-              <div
-                class="img img3"
-                :style="{ 'background-image': `url(${classImg3})` }"
-              ></div>
-            </div>
-          </div>
-          <div class="bottom">
-            <p>立體</p>
-            <p class="btn">查看更多</p>
+            <p>{{ card.class }}</p>
+            <p class="btn">更多</p>
           </div>
         </router-link>
       </div>
@@ -251,29 +247,26 @@ export default {
 <style scoped lang="scss">
 section {
   width: 100%;
-  padding: 6vh 0;
-  // padding-top: calc(var(--header-height) + 40px);
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
   position: relative;
-  top: 0;
+  padding-bottom: 5vh;
+  min-height: calc(100vh - var(--header-height));
   .btns {
+    padding: 6vh 3%;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 2%;
-    padding: 0 5% 2vh 5%;
     .container {
       width: 100%;
       max-width: var(--max-width);
       justify-content: flex-start;
-      align-items: center;
+        align-items: center;
       display: flex;
       @media (max-width: 768px) {
-        padding: 0;
         justify-content: space-between;
       }
     }
@@ -283,12 +276,14 @@ section {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: calc(var(--h6-size) * 0.8);
+        p {
+          font-size: calc(var(--main-font-size) + 2px);
+        }
         font-weight: 600;
         color: var(--font-color);
         cursor: pointer;
         i {
-          font-size: calc(var(--h6-size) * 0.8);
+          font-size: calc(var(--main-font-size) + 2px);
         }
       }
     }
