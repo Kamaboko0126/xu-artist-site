@@ -200,9 +200,9 @@ export default {
         </div>
         <div class="center">
           <!-- eslint-disable-next-line no-irregular-whitespace -->
-          <p class="first" @click="switchTo('r')">作品瀏覽</p>
-          <!-- eslint-disable-next-line no-irregular-whitespace -->
           <p class="second" @click="switchTo('c')">作品分類</p>
+          <!-- eslint-disable-next-line no-irregular-whitespace -->
+          <p class="first" @click="switchTo('r')">作品瀏覽</p>
         </div>
       </div>
     </div>
@@ -316,7 +316,7 @@ section {
     position: relative;
     height: calc(calc(100vh - var(--header-height)) * 0.9);
     width: 100%;
-    display: flex;
+    display: none;
     justify-content: center;
     .container {
       height: 90%;
@@ -367,7 +367,7 @@ section {
     justify-content: center;
     display: flex;
     align-items: flex-start;
-    display: none;
+    display: flex;
     .cards-container {
       width: 100%;
       max-width: var(--max-width);
