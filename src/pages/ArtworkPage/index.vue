@@ -64,6 +64,7 @@ export default {
         require("@/assets/artworks/normalized/16.jpg"),
         require("@/assets/artworks/normalized/82.jpg"),
         require("@/assets/artworks/normalized/101.jpg"),
+        require("@/assets/banner.jpg"),
       ];
       try {
         await Promise.all(imageSources.map((src) => loadImage(src)));

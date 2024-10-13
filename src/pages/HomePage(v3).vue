@@ -51,8 +51,8 @@ export default {
     const loadAllImages = async () => {
       const imageSources = [
         bannerImg.value,
-        iconImg.value,
-        artistImg.value,
+        // iconImg.value,
+        // artistImg.value,
         eihibitionImg1.value,
         eihibitionImg2.value,
         eihibitionImg3.value,
