@@ -9,7 +9,7 @@ export default {
   setup() {
     const artworkImgs = ref();
     provide("artworkImgs", artworkImgs);
-    const bannerImg = ref(require("@/assets/banner.jpg"));
+    const bannerImg = ref(require("@/assets/banner(compressed).jpg"));
     const windowWidth = ref(window.innerWidth);
     const isHomepage = ref(false);
     const bgm = ref(require("@/assets/bgm.mp3"));

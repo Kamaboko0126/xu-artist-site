@@ -6,9 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 /* eslint-disable no-irregular-whitespace */
 export default {
   setup() {
-    const bannerImg = ref(require("@/assets/banner.jpg"));
+    const bannerImg = ref(require("@/assets/banner(compressed).jpg"));
     const iconImg = ref(require("@/assets/icon.png"));
-    const artistImg = ref(require("@/assets/artist.jpg"));
+    const artistImg = ref(require("@/assets/artist(compressed).jpg"));
     const artworkImgs = ref([]);
     const windowWidth = ref(window.innerWidth);
 

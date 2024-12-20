@@ -7,7 +7,7 @@ import { Observer } from "gsap/Observer";
 /* eslint-disable no-irregular-whitespace */
 export default {
   setup() {
-    const bannerImg = ref(require("@/assets/banner.jpg"));
+    const bannerImg = ref(require("@/assets/banner(compressed).jpg"));
     const iconImg = ref(require("@/assets/icon.png"));
     const artistImg = ref(require("@/assets/artist.jpg"));
     const artworkImgs = ref([]);

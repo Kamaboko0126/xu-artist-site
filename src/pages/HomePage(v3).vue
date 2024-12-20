@@ -6,10 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 /* eslint-disable no-irregular-whitespace */
 export default {
   setup() {
-    const bannerImg = ref(require("@/assets/banner.jpg"));
+    const bannerImg = ref(require("@/assets/banner(compressed).jpg"));
     const iconImg = ref(require("@/assets/icons/icon.png"));
-    const artistImg = ref(require("@/assets/artist2.jpg"));
-    const btnImg = ref(require("@/assets/btn.png"));
+    const artistImg = ref(require("@/assets/artist3.jpg"));
     const eihibitionImg1 = ref(
       require("@/assets/exhibition-images/exhibition6.jpg")
     );
@@ -52,7 +51,7 @@ export default {
       const imageSources = [
         bannerImg.value,
         // iconImg.value,
-        // artistImg.value,
+        artistImg.value,
         eihibitionImg1.value,
         eihibitionImg2.value,
         eihibitionImg3.value,
@@ -355,7 +354,6 @@ export default {
       eihibitionImg1,
       eihibitionImg2,
       eihibitionImg3,
-      btnImg,
     };
   },
 };
