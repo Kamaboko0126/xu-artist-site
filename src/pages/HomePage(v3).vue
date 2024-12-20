@@ -10,13 +10,13 @@ export default {
     const iconImg = ref(require("@/assets/icons/icon.png"));
     const artistImg = ref(require("@/assets/artist3.jpg"));
     const eihibitionImg1 = ref(
-      require("@/assets/exhibition-images/exhibition6.jpg")
+      require("@/assets/exhibition-images/exhibition1.jpg")
     );
     const eihibitionImg2 = ref(
-      require("@/assets/exhibition-images/exhibition5.jpg")
+      require("@/assets/exhibition-images/exhibition2.jpg")
     );
     const eihibitionImg3 = ref(
-      require("@/assets/exhibition-images/exhibition4.jpg")
+      require("@/assets/exhibition-images/exhibition3.jpg")
     );
     const artworkImgs = inject("artworkImgs");
     const logoColor = ref("");
